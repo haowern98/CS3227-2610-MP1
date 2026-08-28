@@ -34,9 +34,9 @@ Manual runtime smoke check recorded on 29 August 2026:
 - Result: JavaFX started without a Gradle error or Java native-access warning. The process remained
   active, as expected while the application window was open, and was then intentionally stopped.
 
-The Phase 2 service and storage tests passed on Windows 11 on 29 August 2026. The new dashboard,
-dialog, filtering, archive confirmation, and persistence feedback are pending manual UI review;
-they must not be treated as visually verified yet.
+The Phase 2 service and storage tests passed on Windows 11 on 29 August 2026. The student also
+manually verified the dashboard, dialog, filtering, archive confirmation, and persistence after
+relaunch on Windows 11. macOS and Linux runtime testing remains outstanding.
 
 The supplied `check_mp1_structure.sh` script was also run on 29 August 2026. All required source,
 documentation, log, and directory checks passed. The only failure was the expected absence of a

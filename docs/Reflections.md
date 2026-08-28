@@ -62,7 +62,8 @@ cannot prove that a JavaFX dialog is understandable or visually correct.
 **Verification and evolution.** The possession and storage tests were written before the corresponding
 implementation and first failed because the classes did not exist. They then passed after the
 minimal model, service, and storage code was added. The application uses Java `Path` APIs and stores
-data below the current user's home directory. Manual UI verification remains pending.
+data below the current user's home directory. The Windows UI workflow was manually verified; other
+platforms remain unverified.
 
 **Engineering judgement.** I kept this phase to one persisted entity and a single dashboard. I did
 not add a generic repository layer, cloud synchronization, or a relationship graph before a feature

@@ -2,8 +2,8 @@
 
 ## Current status
 
-Phase 2 adds the possession dashboard. Its manual UI review is still pending; lifecycle,
-relationship, and compatibility features are not available yet.
+Phase 2 adds a manually verified possession dashboard on Windows 11. Lifecycle, relationship, and
+compatibility features are not available yet.
 
 ## Prerequisites
 
