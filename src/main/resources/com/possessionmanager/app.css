@@ -1,0 +1,14 @@
+.root {
+    -fx-background-color: #f8fafc;
+    -fx-font-family: "Segoe UI";
+}
+
+.placeholder-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.placeholder-copy {
+    -fx-font-size: 14px;
+    -fx-text-fill: #475569;
+}
