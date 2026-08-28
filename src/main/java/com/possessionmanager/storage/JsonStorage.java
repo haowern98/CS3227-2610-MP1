@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.possessionmanager.model.AppData;
+import com.possessionmanager.service.LifecycleEventService;
 import com.possessionmanager.service.PossessionService;
 import java.io.IOException;
 import java.io.Reader;
@@ -12,6 +13,7 @@ import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -39,6 +41,12 @@ public final class JsonStorage {
                 .registerTypeAdapter(LocalDateTime.class,
                         (com.google.gson.JsonDeserializer<LocalDateTime>) (value, type, context) ->
                                 LocalDateTime.parse(value.getAsString()))
+                .registerTypeAdapter(LocalDate.class,
+                        (com.google.gson.JsonSerializer<LocalDate>) (value, type, context) ->
+                                new com.google.gson.JsonPrimitive(value.toString()))
+                .registerTypeAdapter(LocalDate.class,
+                        (com.google.gson.JsonDeserializer<LocalDate>) (value, type, context) ->
+                                LocalDate.parse(value.getAsString()))
                 .create();
     }
 
@@ -57,7 +65,8 @@ public final class JsonStorage {
             if (data == null) {
                 throw new JsonParseException("Data file is empty.");
             }
-            new PossessionService(data);
+            PossessionService possessions = new PossessionService(data);
+            new LifecycleEventService(possessions, data.lifecycleEvents());
             return data;
         } catch (IOException | RuntimeException exception) {
             preserveCorruptFile(exception);
@@ -73,7 +82,8 @@ public final class JsonStorage {
      */
     public void save(AppData data) {
         try {
-            new PossessionService(data);
+            PossessionService possessions = new PossessionService(data);
+            new LifecycleEventService(possessions, data.lifecycleEvents());
             Path parent = dataFile.getParent();
             if (parent != null) {
                 Files.createDirectories(parent);
