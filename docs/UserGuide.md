@@ -2,8 +2,8 @@
 
 ## Current status
 
-Phase 1 provides the JavaFX application foundation. Possession, lifecycle, relationship, and
-compatibility features will be documented here when they are implemented and verified.
+Phase 2 adds a manually verified possession dashboard on Windows 11. Lifecycle, relationship, and
+compatibility features are not available yet.
 
 ## Prerequisites
 
@@ -22,7 +22,16 @@ From the repository root, run one of the following commands:
 ./gradlew run
 ```
 
-The command opens a window titled `Possession Manager` with a temporary foundation screen.
+The command opens the Possession Manager dashboard.
+
+## Managing possessions
+
+Use **Add Possession** to record a physical item. A name is required; category, location, status,
+comma-separated tags, and notes are optional. Select a row and choose **Edit Selected**, double-click
+the row, or choose **Archive Selected** to manage an existing item.
+
+Use the search box to match names and tags. Category and status filters work together with search.
+Archived items are preserved in the data file but do not appear in active dashboard results.
 
 ## Running automated tests
 
@@ -36,10 +45,12 @@ From the repository root, run:
 ./gradlew test
 ```
 
-The Phase 1 smoke test verifies that the application's shared stylesheet is included in the
-runtime resources.
+The suite covers stylesheet packaging, possession validation, CRUD querying and archival, JSON
+round trips, missing data files, and corrupt-data backup handling.
 
 ## Data and limitations
 
-Phase 1 does not create or persist any user data. It is not yet possible to add, edit, or search
-possessions.
+Data is saved after each successful addition, edit, or archive to
+`~/.possession-manager/data.json`, where `~` is the current user's home directory on Windows,
+macOS, or Linux. If the file is corrupt, the app preserves it as a timestamped `data.corrupt-*.json`
+backup and displays an error. Cross-platform runtime testing is still required.
