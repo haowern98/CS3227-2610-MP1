@@ -1,21 +1,30 @@
 package com.possessionmanager.model;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents the complete set of data persisted by the current application phase.
  *
  * @param possessions possessions known to the application.
+ * @param lifecycleEvents lifecycle events linked to possessions.
  */
-public record AppData(List<Possession> possessions) {
+public record AppData(List<Possession> possessions, List<LifecycleEvent> lifecycleEvents) {
 
     /**
      * Creates an immutable snapshot of the supplied possessions.
      */
     public AppData {
-        Objects.requireNonNull(possessions, "possessions must not be null");
-        possessions = List.copyOf(possessions);
+        possessions = possessions == null ? List.of() : List.copyOf(possessions);
+        lifecycleEvents = lifecycleEvents == null ? List.of() : List.copyOf(lifecycleEvents);
+    }
+
+    /**
+     * Creates a possession-only snapshot compatible with the first persisted format.
+     *
+     * @param possessions possessions known to the application.
+     */
+    public AppData(List<Possession> possessions) {
+        this(possessions, List.of());
     }
 
     /**
