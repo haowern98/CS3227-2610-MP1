@@ -3,12 +3,18 @@
     -fx-font-family: "Segoe UI";
 }
 
-.placeholder-title {
+.page-title {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
 }
 
-.placeholder-copy {
+.page-subtitle {
     -fx-font-size: 14px;
     -fx-text-fill: #475569;
+}
+
+.primary-button {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
