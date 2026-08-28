@@ -49,3 +49,21 @@ until it failed for the intended missing-resource reason before adding that reso
 
 **Engineering judgement.** The Phase 1 scope stops at a small, runnable shell. Domain abstractions,
 storage, and feature dialogs are deferred until they are needed by later increments.
+
+## 4. Implementing the first persistence slice
+
+**Prompt formulation.** I asked the AI to implement only possession CRUD and local JSON persistence,
+with test-first checks and no relationship or compatibility features.
+
+**Assumptions and limitations.** A local JSON file is portable in format, but platform portability
+also depends on correct path handling and actual testing on each operating system. Automated tests
+cannot prove that a JavaFX dialog is understandable or visually correct.
+
+**Verification and evolution.** The possession and storage tests were written before the corresponding
+implementation and first failed because the classes did not exist. They then passed after the
+minimal model, service, and storage code was added. The application uses Java `Path` APIs and stores
+data below the current user's home directory. Manual UI verification remains pending.
+
+**Engineering judgement.** I kept this phase to one persisted entity and a single dashboard. I did
+not add a generic repository layer, cloud synchronization, or a relationship graph before a feature
+requires them.

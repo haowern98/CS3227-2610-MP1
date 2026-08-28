@@ -1,15 +1,25 @@
 # Possession Manager Developer Guide
 
-## Phase 1 architecture
+## Architecture
 
 The foundation uses Gradle 9.7.1, Java 25, JavaFX 25.0.4, and JUnit Jupiter. The Gradle wrapper
 is the supported project entry point; no system Gradle installation is required.
 
-`com.possessionmanager.App` is the JavaFX entry point. It creates the initial application window
+`com.possessionmanager.App` is the JavaFX entry point. It loads local data, creates the dashboard,
 and loads the shared stylesheet from `src/main/resources/com/possessionmanager/app.css`.
 
-The next phases will add domain, service, storage, and UI packages. The planned file map and
-responsibilities are maintained in `Project_plans.md`.
+Phase 2 has four small layers:
+
+- `model` contains immutable possession data, fixed category/status enums, and the persisted
+  `AppData` snapshot.
+- `service.PossessionService` validates and normalizes input, owns records by stable UUID, and
+  provides active-list, search, filter, edit, and archive operations.
+- `storage.JsonStorage` reads and writes one UTF-8 JSON file under the user's home directory. It
+  writes through a temporary file and preserves a corrupt file before reporting a load failure.
+- `ui.DashboardView` and `ui.PossessionDialog` use the service and storage without embedding
+  domain validation in table controls.
+
+The planned file map and future-phase responsibilities are maintained in `Project_plans.md`.
 
 ## Testing
 
@@ -24,8 +34,9 @@ Manual runtime smoke check recorded on 29 August 2026:
 - Result: JavaFX started without a Gradle error or Java native-access warning. The process remained
   active, as expected while the application window was open, and was then intentionally stopped.
 
-Future GUI flows and error paths must be manually tested and recorded when the corresponding
-features exist.
+The Phase 2 service and storage tests passed on Windows 11 on 29 August 2026. The new dashboard,
+dialog, filtering, archive confirmation, and persistence feedback are pending manual UI review;
+they must not be treated as visually verified yet.
 
 The supplied `check_mp1_structure.sh` script was also run on 29 August 2026. All required source,
 documentation, log, and directory checks passed. The only failure was the expected absence of a
@@ -33,10 +44,10 @@ release JAR; creating a tested self-contained release is deferred until the fina
 
 ## Reuse and AI assistance
 
-This project uses the JavaFX Gradle Plugin, JavaFX, Gradle, and JUnit Jupiter as documented build
-libraries. The project-local `present-changes-visually` workflow is adapted from the SE-EDU skill
-at https://github.com/se-edu/skill-present-changes-visually. No third-party application code has
-been copied into the repository.
+This project uses the JavaFX Gradle Plugin, JavaFX, Gradle, JUnit Jupiter, and Gson 2.13.2 for
+JSON serialization. The project-local `present-changes-visually` workflow is adapted from the
+SE-EDU skill at https://github.com/se-edu/skill-present-changes-visually. No third-party
+application code has been copied into the repository.
 
 I used Codex to help plan the application, set up the initial build, draft documentation, and run
 verification commands. I reviewed the output and remain responsible for the submitted content and
