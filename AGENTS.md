@@ -18,6 +18,14 @@
 - Keep changes small, explain their purpose, and verify them in proportion to their risk.
 - Stage files in logical groups by purpose. Do not stage unrelated changes together.
 - Keep commit purposes separate, using conventional subjects such as `feat:`, `test:`, `docs:`, `refactor:`, and `chore:`. Do not mix feature, test, documentation, refactoring, and housekeeping changes in one commit when they can be committed separately.
+- Give every non-trivial commit a subject and body separated by one blank line. Keep body lines to a
+  maximum of 72 characters and use blank lines or bullets when they improve readability.
+- In a non-trivial commit body, explain WHAT the change covers and WHY it is needed, rather than
+  narrating implementation details that readers can see in the diff. Describe the existing situation
+  in present tense, introduce the change with imperative wording when useful, and include relevant
+  trade-offs or limitations.
+- Keep a commit body concise enough that a reviewer can judge the change without opening the diff.
+  If that explanation becomes too long, split the work into smaller commits instead.
 - Treat refactoring as a small, behavior-preserving change only. Run regression tests after each
   refactoring, and never mix it with a feature or bug fix in the same commit.
 - Integrate completed vertical slices early and frequently. Avoid late, large, or big-bang merges.
