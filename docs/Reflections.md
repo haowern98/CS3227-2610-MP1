@@ -68,3 +68,23 @@ platforms remain unverified.
 **Engineering judgement.** I kept this phase to one persisted entity and a single dashboard. I did
 not add a generic repository layer, cloud synchronization, or a relationship graph before a feature
 requires them.
+
+## 5. Adding lifecycle history without broadening the product
+
+**Prompt formulation.** I asked the AI to add per-possession lifecycle history as the next vertical
+slice, with dated records, local persistence, and a detail screen, while keeping relationships and
+compatibility out of scope.
+
+**Assumptions and limitations.** The AI initially cannot visually verify a JavaFX screen or infer
+whether the user understands a dialog. It also cannot assume an old possession-only JSON file will
+contain the new event list.
+
+**Verification and evolution.** I required tests before the lifecycle implementation. The planned
+tests initially failed because the lifecycle model and service did not exist, then passed after the
+minimal implementation. I manually tested the detail screen on Windows: event add, edit, deletion,
+newest-first ordering, future-date rejection, and persistence after relaunch all passed. The data
+model treats a missing event list in an older JSON file as empty.
+
+**Engineering judgement.** I used a fixed event-type enum and date-only entries rather than a
+user-configurable event schema or time-of-day fields. This supports clear history records without
+turning the app into a general activity tracker.
