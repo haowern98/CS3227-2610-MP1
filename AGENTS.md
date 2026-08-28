@@ -28,6 +28,16 @@
 - Handle invalid input, missing/corrupt data files, duplicate records where uniqueness matters, invalid dates/amounts, and other anticipated user errors with clear messages.
 - Do not copy code or designs from other projects without recording the source and acknowledging it in the Developer Guide.
 
+## Project AI Workflows
+
+- Before committing a non-trivial implementation change, use the project-local
+  `present-changes-visually` skill to inspect the proposed diff.
+- After a change to a JavaFX screen, dialog, navigation flow, visible validation, or UI-visible
+  persistence behavior, update `test/ui-test-plan.md` if needed and use the project-local `test-ui`
+  skill. Record manual results; do not claim visual verification without a human check.
+- Before closing a phase, opening a pull request, merging, or claiming a milestone is complete, use
+  the project-local `phase-verification` skill.
+
 ## Code Quality and Java Style
 
 - Maximize readability. Keep methods short; review and split a method that grows beyond roughly 30 lines when doing so improves clarity.

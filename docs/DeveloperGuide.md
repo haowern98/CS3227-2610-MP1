@@ -34,7 +34,9 @@ release JAR; creating a tested self-contained release is deferred until the fina
 ## Reuse and AI assistance
 
 This project uses the JavaFX Gradle Plugin, JavaFX, Gradle, and JUnit Jupiter as documented build
-libraries. No third-party application code has been copied into the repository.
+libraries. The project-local `present-changes-visually` workflow is adapted from the SE-EDU skill
+at https://github.com/se-edu/skill-present-changes-visually. No third-party application code has
+been copied into the repository.
 
 I used Codex to help plan the application, set up the initial build, draft documentation, and run
 verification commands. I reviewed the output and remain responsible for the submitted content and
