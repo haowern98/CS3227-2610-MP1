@@ -84,10 +84,12 @@ public final class DashboardView {
         searchField.setPrefWidth(240);
         categoryFilter.setPromptText("All categories");
         statusFilter.setPromptText("All statuses");
+        Button clearFiltersButton = new Button("Clear Filters");
+        clearFiltersButton.setOnAction(event -> clearFilters());
         Button addButton = new Button("+ Add Possession");
         addButton.getStyleClass().add("primary-button");
         addButton.setOnAction(event -> addPossession());
-        HBox actions = new HBox(10, searchField, categoryFilter, statusFilter, addButton);
+        HBox actions = new HBox(10, searchField, categoryFilter, statusFilter, clearFiltersButton, addButton);
         actions.setPadding(new Insets(16, 0, 0, 0));
         return actions;
     }
@@ -110,6 +112,8 @@ public final class DashboardView {
     private void configureFilters() {
         categoryFilter.getItems().setAll(PossessionCategory.values());
         statusFilter.getItems().setAll(PossessionStatus.values());
+        categoryFilter.getSelectionModel().clearSelection();
+        statusFilter.getSelectionModel().clearSelection();
         searchField.textProperty().addListener((observable, oldText, newText) -> refreshTable());
         categoryFilter.valueProperty().addListener((observable, oldValue, newValue) -> refreshTable());
         statusFilter.valueProperty().addListener((observable, oldValue, newValue) -> refreshTable());
@@ -183,6 +187,12 @@ public final class DashboardView {
         displayedPossessions.setAll(possessionService.query(searchField.getText(), categoryFilter.getValue(),
                 statusFilter.getValue()));
         countLabel.setText(displayedPossessions.size() + " active possession(s)");
+    }
+
+    private void clearFilters() {
+        searchField.clear();
+        categoryFilter.getSelectionModel().clearSelection();
+        statusFilter.getSelectionModel().clearSelection();
     }
 
     private String format(Enum<?> value) {
