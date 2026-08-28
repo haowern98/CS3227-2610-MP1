@@ -19,6 +19,8 @@ implementing product features.
   dependency was added before the intended missing-stylesheet test was rerun.
 - The stylesheet test was observed failing before the stylesheet was added and passing afterward.
 - The JavaFX runtime smoke check was run on Windows 11 with Microsoft OpenJDK 25.0.4.1.
+- The student visually confirmed the launch screen on Windows 11: its title, heading, placeholder text,
+  and stylesheet matched the Phase 1 foundation design.
 - The supplied repository-structure checker passed every path check and reported only the missing
   release JAR, which is intentionally deferred to the final release phase.
 

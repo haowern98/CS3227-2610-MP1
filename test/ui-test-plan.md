@@ -11,5 +11,6 @@ captured. A result is not verified until a human has visually checked the releva
 - Preconditions: a Java 25 JDK is available and the repository root is the working directory.
 - Actions: run `./gradlew.bat run` on Windows or `./gradlew run` on macOS/Linux.
 - Expected result: a window titled `Possession Manager` opens and shows the foundation screen.
-- Observed result: Windows 11 runtime process started without a Gradle error or Java native-access
-  warning on 29 August 2026. Visual confirmation of the window contents is still required.
+- Observed result: Passed on Windows 11 on 29 August 2026 using `./gradlew.bat run`. The window title,
+  `Possession Manager` heading, placeholder text, and stylesheet were visually confirmed from the
+  student's screenshot. No Gradle error or Java native-access warning occurred.
