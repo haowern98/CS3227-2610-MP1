@@ -18,3 +18,8 @@ The upstream visual-diff skill referenced an unavailable commit-message skill. T
 replaced with this repository's `AGENTS.md` commit conventions. The console-oriented course example
 for `test-ui` was adapted to record manual JavaFX visual verification instead of falsely automating
 GUI inspection.
+
+The root `AGENTS.md` was expanded with the remaining course-derived practices: regression checks
+after behavior-preserving refactors, incremental integration, referential integrity and defensive
+copies, correct exception/assertion boundaries, root-cause debugging, and top-down developer
+documentation.

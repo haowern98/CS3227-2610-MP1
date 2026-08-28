@@ -18,6 +18,9 @@
 - Keep changes small, explain their purpose, and verify them in proportion to their risk.
 - Stage files in logical groups by purpose. Do not stage unrelated changes together.
 - Keep commit purposes separate, using conventional subjects such as `feat:`, `test:`, `docs:`, `refactor:`, and `chore:`. Do not mix feature, test, documentation, refactoring, and housekeeping changes in one commit when they can be committed separately.
+- Treat refactoring as a small, behavior-preserving change only. Run regression tests after each
+  refactoring, and never mix it with a feature or bug fix in the same commit.
+- Integrate completed vertical slices early and frequently. Avoid late, large, or big-bang merges.
 
 ## Engineering Expectations
 
@@ -26,7 +29,21 @@
 - Add automated JUnit tests for domain logic, parsing, calculations, validation, filtering, and persistence that can be tested without the GUI.
 - Manually test GUI flows and error messages; do not claim completion without recording the verification performed.
 - Handle invalid input, missing/corrupt data files, duplicate records where uniqueness matters, invalid dates/amounts, and other anticipated user errors with clear messages.
+- Preserve referential integrity: records may refer only to existing records, and operations must not
+  leave broken or contradictory relationships. Do not expose mutable internal collections; return
+  immutable or defensive copies where callers must not mutate owned state.
 - Do not copy code or designs from other projects without recording the source and acknowledging it in the Developer Guide.
+
+## Error Handling and Debugging
+
+- Use exceptions for unusual user or environment failures, not ordinary control flow. Surface clear,
+  actionable messages at the UI boundary while retaining the cause for diagnosis where appropriate.
+- Use Java `assert` only for programmer assumptions and invariants, never for user input validation or
+  essential program work. Ensure assertions are enabled whenever they are intentionally verified.
+- Diagnose defects systematically: reproduce and simplify the failure, form a falsifiable hypothesis,
+  inspect the evidence and root cause, then add a regression test before implementing the fix.
+- Verify a fix against the reproduction and the full test suite; check for the same defect in related
+  code, remove temporary probes, and commit the bug fix separately from unrelated cleanup.
 
 ## Project AI Workflows
 
@@ -43,6 +60,8 @@
 - Maximize readability. Keep methods short; review and split a method that grows beyond roughly 30 lines when doing so improves clarity.
 - Avoid nesting beyond three levels. Prefer guard clauses and early returns so the happy path remains prominent.
 - Avoid magic literals, complicated boolean expressions, clever code, premature optimization, dead code, empty `catch` blocks, duplicated logic, and misleading names.
+- Do not recycle variables or parameters for unrelated meanings. Use enums instead of arbitrary
+  primitive or string values when a value belongs to a small fixed set.
 - Keep each method at one clear level of abstraction. Group related statements and arrange them to read as a logical story.
 - Use meaningful English names: classes and enums are PascalCase nouns; methods are camelCase verbs; variables are camelCase; booleans use forms such as `isValid` or `hasData`; collections use plural names; constants use `UPPER_SNAKE_CASE`.
 - Put every class in a logical Java package. Use explicit imports rather than wildcard imports.
@@ -81,6 +100,10 @@ Maintain these artifacts so that they accurately match the latest application st
 ## Documentation Quality
 
 - Keep documentation concise, accurate, and synchronized with the application.
+- Organize developer documentation top-down: explain the product and high-level architecture before
+  progressively drilling into selected implementation details.
+- Use diagrams and worked examples only when they materially improve understanding. Do not include
+  artefacts merely for completeness or repeat details already obvious from the code.
 - Include exact commands, examples, file paths, and expected behaviour only after verifying them.
 - Update the User Guide, Developer Guide, reflection, and relevant prompt-log summary in the same change set as a feature when practical.
 - Make the User Guide fit for purpose: give a new user verified prerequisites, exact setup and launch steps, every important feature with realistic examples, persistence/data-file behaviour, known limitations, and screenshots when they materially clarify a GUI action.
