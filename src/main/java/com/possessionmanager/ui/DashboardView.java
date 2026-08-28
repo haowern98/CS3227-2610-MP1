@@ -1,14 +1,17 @@
 package com.possessionmanager.ui;
 
+import com.possessionmanager.model.AppData;
 import com.possessionmanager.model.Possession;
 import com.possessionmanager.model.PossessionCategory;
 import com.possessionmanager.model.PossessionInput;
 import com.possessionmanager.model.PossessionStatus;
+import com.possessionmanager.service.LifecycleEventService;
 import com.possessionmanager.service.PossessionService;
 import com.possessionmanager.service.ValidationException;
 import com.possessionmanager.storage.JsonStorage;
 import com.possessionmanager.storage.StorageException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -35,7 +38,9 @@ import javafx.scene.layout.VBox;
  */
 public final class DashboardView {
     private final PossessionService possessionService;
+    private final LifecycleEventService lifecycleEventService;
     private final JsonStorage storage;
+    private final Consumer<java.util.UUID> showPossessionDetail;
     private final TableView<Possession> possessionTable = new TableView<>();
     private final ObservableList<Possession> displayedPossessions = FXCollections.observableArrayList();
     private final TextField searchField = new TextField();
@@ -47,11 +52,16 @@ public final class DashboardView {
      * Creates a dashboard backed by the supplied service and local storage.
      *
      * @param possessionService service that owns possession data.
+     * @param lifecycleEventService service that owns possession lifecycle events.
      * @param storage local JSON storage used after each successful change.
+     * @param showPossessionDetail action that opens one possession's detail screen.
      */
-    public DashboardView(PossessionService possessionService, JsonStorage storage) {
+    public DashboardView(PossessionService possessionService, LifecycleEventService lifecycleEventService,
+            JsonStorage storage, Consumer<java.util.UUID> showPossessionDetail) {
         this.possessionService = possessionService;
+        this.lifecycleEventService = lifecycleEventService;
         this.storage = storage;
+        this.showPossessionDetail = showPossessionDetail;
         configureFilters();
         configureTable();
         refreshTable();
@@ -95,13 +105,16 @@ public final class DashboardView {
     }
 
     private VBox createContent() {
+        Button detailsButton = new Button("View Details");
+        detailsButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
+        detailsButton.setOnAction(event -> openSelectedPossession());
         Button editButton = new Button("Edit Selected");
         editButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
         editButton.setOnAction(event -> editSelectedPossession());
         Button archiveButton = new Button("Archive Selected");
         archiveButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
         archiveButton.setOnAction(event -> archiveSelectedPossession());
-        HBox tableActions = new HBox(10, countLabel, editButton, archiveButton);
+        HBox tableActions = new HBox(10, countLabel, detailsButton, editButton, archiveButton);
         HBox.setHgrow(countLabel, Priority.ALWAYS);
         VBox content = new VBox(12, tableActions, possessionTable);
         content.setPadding(new Insets(8, 24, 24, 24));
@@ -131,7 +144,7 @@ public final class DashboardView {
         possessionTable.setPlaceholder(new Label("No active possessions yet. Add your first item."));
         possessionTable.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                editSelectedPossession();
+                openSelectedPossession();
             }
         });
     }
@@ -150,6 +163,13 @@ public final class DashboardView {
         Possession selected = possessionTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
             PossessionDialog.show(selected).ifPresent(input -> updatePossession(selected, input));
+        }
+    }
+
+    private void openSelectedPossession() {
+        Possession selected = possessionTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            showPossessionDetail.accept(selected.id());
         }
     }
 
@@ -176,7 +196,7 @@ public final class DashboardView {
     private void applyChange(Runnable change) {
         try {
             change.run();
-            storage.save(possessionService.toAppData());
+            storage.save(new AppData(possessionService.toAppData().possessions(), lifecycleEventService.listAll()));
             refreshTable();
         } catch (ValidationException | StorageException exception) {
             showError(exception.getMessage());
