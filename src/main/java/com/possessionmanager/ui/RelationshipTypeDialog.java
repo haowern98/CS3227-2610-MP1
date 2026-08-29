@@ -15,6 +15,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -22,6 +23,10 @@ import javafx.scene.layout.GridPane;
  * Collects a built-in or custom label for a possession relationship.
  */
 public final class RelationshipTypeDialog {
+    private static final double DIALOG_WIDTH = 820;
+    private static final double DIALOG_HEIGHT = 550;
+    private static final double PREVIEW_WIDTH = 480;
+
     private RelationshipTypeDialog() {
     }
 
@@ -36,6 +41,8 @@ public final class RelationshipTypeDialog {
         boolean isEditing = type != null;
         dialog.setTitle(isEditing ? "Edit Relationship Label" : "Add Relationship Label");
         dialog.setHeaderText("Choose a built-in label or create a custom one.");
+        dialog.setResizable(false);
+        dialog.getDialogPane().setPrefSize(DIALOG_WIDTH, DIALOG_HEIGHT);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 
         Fields fields = new Fields(type);
@@ -90,6 +97,10 @@ public final class RelationshipTypeDialog {
         }
 
         private GridPane createForm() {
+            previewLabel.setMinWidth(0);
+            previewLabel.setPrefWidth(PREVIEW_WIDTH);
+            previewLabel.setMaxWidth(PREVIEW_WIDTH);
+            previewLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
             GridPane form = new GridPane();
             form.setHgap(10);
             form.setVgap(10);
