@@ -6,6 +6,7 @@ import com.possessionmanager.model.LifecycleEventInput;
 import com.possessionmanager.model.Possession;
 import com.possessionmanager.service.LifecycleEventService;
 import com.possessionmanager.service.PossessionService;
+import com.possessionmanager.service.RelationshipTypeService;
 import com.possessionmanager.service.ValidationException;
 import com.possessionmanager.storage.JsonStorage;
 import com.possessionmanager.storage.StorageException;
@@ -36,6 +37,7 @@ import javafx.scene.layout.VBox;
 public final class PossessionDetailView {
     private final PossessionService possessionService;
     private final LifecycleEventService lifecycleEventService;
+    private final RelationshipTypeService relationshipTypeService;
     private final JsonStorage storage;
     private final Runnable showDashboard;
     private final TableView<LifecycleEvent> eventTable = new TableView<>();
@@ -48,13 +50,15 @@ public final class PossessionDetailView {
      *
      * @param possessionService service that owns possession records.
      * @param lifecycleEventService service that owns lifecycle events.
+     * @param relationshipTypeService service that owns relationship types.
      * @param storage local JSON storage used after each successful change.
      * @param showDashboard action that returns to the dashboard.
      */
     public PossessionDetailView(PossessionService possessionService, LifecycleEventService lifecycleEventService,
-            JsonStorage storage, Runnable showDashboard) {
+            RelationshipTypeService relationshipTypeService, JsonStorage storage, Runnable showDashboard) {
         this.possessionService = possessionService;
         this.lifecycleEventService = lifecycleEventService;
+        this.relationshipTypeService = relationshipTypeService;
         this.storage = storage;
         this.showDashboard = showDashboard;
     }
@@ -179,7 +183,8 @@ public final class PossessionDetailView {
     private void applyChange(Runnable change) {
         try {
             change.run();
-            storage.save(new AppData(possessionService.toAppData().possessions(), lifecycleEventService.listAll()));
+            storage.save(new AppData(possessionService.toAppData().possessions(), lifecycleEventService.listAll(),
+                    relationshipTypeService.listTypes()));
             refreshEvents();
         } catch (ValidationException | StorageException exception) {
             showError(exception.getMessage());

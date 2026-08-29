@@ -7,6 +7,7 @@ import com.possessionmanager.model.PossessionInput;
 import com.possessionmanager.model.PossessionStatus;
 import com.possessionmanager.service.LifecycleEventService;
 import com.possessionmanager.service.PossessionService;
+import com.possessionmanager.service.RelationshipTypeService;
 import com.possessionmanager.service.ValidationException;
 import com.possessionmanager.storage.JsonStorage;
 import com.possessionmanager.storage.StorageException;
@@ -39,8 +40,10 @@ import javafx.scene.layout.VBox;
 public final class DashboardView {
     private final PossessionService possessionService;
     private final LifecycleEventService lifecycleEventService;
+    private final RelationshipTypeService relationshipTypeService;
     private final JsonStorage storage;
     private final Consumer<java.util.UUID> showPossessionDetail;
+    private final Runnable showRelationshipTypeManager;
     private final TableView<Possession> possessionTable = new TableView<>();
     private final ObservableList<Possession> displayedPossessions = FXCollections.observableArrayList();
     private final TextField searchField = new TextField();
@@ -53,15 +56,20 @@ public final class DashboardView {
      *
      * @param possessionService service that owns possession data.
      * @param lifecycleEventService service that owns possession lifecycle events.
+     * @param relationshipTypeService service that owns relationship types.
      * @param storage local JSON storage used after each successful change.
      * @param showPossessionDetail action that opens one possession's detail screen.
+     * @param showRelationshipTypeManager action that opens the relationship-type manager.
      */
     public DashboardView(PossessionService possessionService, LifecycleEventService lifecycleEventService,
-            JsonStorage storage, Consumer<java.util.UUID> showPossessionDetail) {
+            RelationshipTypeService relationshipTypeService, JsonStorage storage,
+            Consumer<java.util.UUID> showPossessionDetail, Runnable showRelationshipTypeManager) {
         this.possessionService = possessionService;
         this.lifecycleEventService = lifecycleEventService;
+        this.relationshipTypeService = relationshipTypeService;
         this.storage = storage;
         this.showPossessionDetail = showPossessionDetail;
+        this.showRelationshipTypeManager = showRelationshipTypeManager;
         configureFilters();
         configureTable();
         refreshTable();
@@ -84,7 +92,7 @@ public final class DashboardView {
         title.getStyleClass().add("page-title");
         Label subtitle = new Label("Track physical possessions, their location, and current status.");
         subtitle.getStyleClass().add("page-subtitle");
-        VBox header = new VBox(4, title, subtitle, createActions());
+        VBox header = new VBox(4, title, subtitle, createActions(), createTypeManagementAction());
         header.setPadding(new Insets(24, 24, 16, 24));
         return header;
     }
@@ -104,15 +112,26 @@ public final class DashboardView {
         return actions;
     }
 
+    private HBox createTypeManagementAction() {
+        Button manageTypesButton = new Button("Manage Relationship Types");
+        manageTypesButton.setOnAction(event -> showRelationshipTypeManager.run());
+        HBox managementAction = new HBox(manageTypesButton);
+        managementAction.setPadding(new Insets(8, 0, 0, 0));
+        return managementAction;
+    }
+
     private VBox createContent() {
         Button detailsButton = new Button("View Details");
-        detailsButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
+        detailsButton.disableProperty().bind(
+                Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
         detailsButton.setOnAction(event -> openSelectedPossession());
         Button editButton = new Button("Edit Selected");
-        editButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
+        editButton.disableProperty().bind(
+                Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
         editButton.setOnAction(event -> editSelectedPossession());
         Button archiveButton = new Button("Archive Selected");
-        archiveButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
+        archiveButton.disableProperty().bind(
+                Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
         archiveButton.setOnAction(event -> archiveSelectedPossession());
         HBox tableActions = new HBox(10, countLabel, detailsButton, editButton, archiveButton);
         HBox.setHgrow(countLabel, Priority.ALWAYS);
@@ -196,7 +215,8 @@ public final class DashboardView {
     private void applyChange(Runnable change) {
         try {
             change.run();
-            storage.save(new AppData(possessionService.toAppData().possessions(), lifecycleEventService.listAll()));
+            storage.save(new AppData(possessionService.toAppData().possessions(), lifecycleEventService.listAll(),
+                    relationshipTypeService.listTypes()));
             refreshTable();
         } catch (ValidationException | StorageException exception) {
             showError(exception.getMessage());
