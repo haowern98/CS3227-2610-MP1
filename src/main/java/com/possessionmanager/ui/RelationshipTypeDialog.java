@@ -19,23 +19,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 /**
- * Collects predefined or custom wording for a saved possession relationship.
+ * Collects a built-in or custom label for a possession relationship.
  */
 public final class RelationshipTypeDialog {
     private RelationshipTypeDialog() {
     }
 
     /**
-     * Shows an add or edit dialog for a saved relationship.
+     * Shows an add or edit dialog for a relationship label.
      *
-     * @param type relationship to edit, or {@code null} when adding one.
-     * @return entered relationship details when the user saves the dialog.
+     * @param type relationship label to edit, or {@code null} when adding one.
+     * @return entered label details when the user saves the dialog.
      */
     public static Optional<RelationshipTypeInput> show(RelationshipType type) {
         Dialog<RelationshipTypeInput> dialog = new Dialog<>();
         boolean isEditing = type != null;
-        dialog.setTitle(isEditing ? "Edit Saved Relationship" : "Add Saved Relationship");
-        dialog.setHeaderText("Choose ready-made wording or create your own.");
+        dialog.setTitle(isEditing ? "Edit Relationship Label" : "Add Relationship Label");
+        dialog.setHeaderText("Choose a built-in label or create a custom one.");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 
         Fields fields = new Fields(type);
@@ -66,15 +66,13 @@ public final class RelationshipTypeDialog {
 
     private static final class Fields {
         private final ComboBox<RelationshipCategory> categoryBox = new ComboBox<>();
-        private final ComboBox<RelationshipTemplate> templateBox = new ComboBox<>();
         private final TextField nameField = new TextField();
         private final TextField firstPhraseField = new TextField();
-        private final CheckBox samePhraseBox = new CheckBox("Use the same phrase both ways");
+        private final CheckBox samePhraseBox = new CheckBox("Use the same wording when viewing either item");
         private final TextField secondPhraseField = new TextField();
-        private final Label templateLabel = new Label("Predefined wording");
-        private final Label nameLabel = new Label("Saved relationship name *");
-        private final Label firstPhraseLabel = new Label("Phrase for Item A *");
-        private final Label secondPhraseLabel = new Label("Phrase for Item B *");
+        private final Label nameLabel = new Label("Custom label name *");
+        private final Label firstPhraseLabel = new Label("Phrase after \"Item A is\" *");
+        private final Label secondPhraseLabel = new Label("How Item B relates to Item A *");
         private final Label previewLabel = new Label();
 
         private Fields(RelationshipType type) {
@@ -82,7 +80,6 @@ public final class RelationshipTypeDialog {
             categoryBox.valueProperty().addListener((observable, oldCategory, newCategory) -> {
                 updateCategoryControls(newCategory);
             });
-            templateBox.valueProperty().addListener((observable, oldTemplate, newTemplate) -> refreshPreview());
             samePhraseBox.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
                 updateSecondPhraseControl();
                 refreshPreview();
@@ -97,13 +94,12 @@ public final class RelationshipTypeDialog {
             form.setHgap(10);
             form.setVgap(10);
             form.setPadding(new Insets(8));
-            form.addRow(0, new Label("Relationship category"), categoryBox);
-            form.addRow(1, templateLabel, templateBox);
-            form.addRow(2, nameLabel, nameField);
-            form.addRow(3, firstPhraseLabel, firstPhraseField);
-            form.add(samePhraseBox, 1, 4);
-            form.addRow(5, secondPhraseLabel, secondPhraseField);
-            form.add(previewLabel, 1, 6);
+            form.addRow(0, new Label("Relationship label"), categoryBox);
+            form.addRow(1, nameLabel, nameField);
+            form.addRow(2, firstPhraseLabel, firstPhraseField);
+            form.add(samePhraseBox, 1, 3);
+            form.addRow(4, secondPhraseLabel, secondPhraseField);
+            form.add(previewLabel, 1, 5);
             return form;
         }
 
@@ -115,7 +111,6 @@ public final class RelationshipTypeDialog {
             RelationshipTemplate template = findTemplate(type);
             if (template != null) {
                 categoryBox.setValue(template.category());
-                templateBox.setValue(template);
                 return;
             }
             categoryBox.setValue(RelationshipCategory.CUSTOM);
@@ -135,8 +130,6 @@ public final class RelationshipTypeDialog {
 
         private void updateCategoryControls(RelationshipCategory category) {
             boolean isCustom = category == RelationshipCategory.CUSTOM;
-            setVisibleAndManaged(templateLabel, !isCustom);
-            setVisibleAndManaged(templateBox, !isCustom);
             setVisibleAndManaged(nameLabel, isCustom);
             setVisibleAndManaged(nameField, isCustom);
             setVisibleAndManaged(firstPhraseLabel, isCustom);
@@ -146,9 +139,6 @@ public final class RelationshipTypeDialog {
             setVisibleAndManaged(secondPhraseField, isCustom);
             if (isCustom) {
                 updateSecondPhraseControl();
-            } else {
-                templateBox.getItems().setAll(RelationshipTemplate.forCategory(category));
-                templateBox.setValue(templateBox.getItems().getFirst());
             }
             refreshPreview();
         }
@@ -156,28 +146,23 @@ public final class RelationshipTypeDialog {
         private void updateSecondPhraseControl() {
             boolean usesSamePhrase = samePhraseBox.isSelected();
             secondPhraseField.setDisable(usesSamePhrase);
-            secondPhraseLabel.setText(usesSamePhrase ? "Phrase for Item B (uses Item A phrase)"
-                    : "Phrase for Item B *");
+            secondPhraseLabel.setText(usesSamePhrase ? "How Item B relates to Item A (uses Item A wording)"
+                    : "How Item B relates to Item A *");
         }
 
         private void refreshPreview() {
-            String firstPhrase = currentFirstPhrase();
-            String secondPhrase = currentSecondPhrase(firstPhrase);
-            previewLabel.setText("Preview: Item A " + firstPhrase + " Item B; Item B " + secondPhrase + " Item A");
-        }
-
-        private String currentFirstPhrase() {
-            RelationshipTemplate template = templateBox.getValue();
-            return categoryBox.getValue() == RelationshipCategory.CUSTOM ? firstPhraseField.getText()
-                    : template == null ? "" : template.forwardLabel();
-        }
-
-        private String currentSecondPhrase(String firstPhrase) {
-            RelationshipTemplate template = templateBox.getValue();
             if (categoryBox.getValue() != RelationshipCategory.CUSTOM) {
-                return template == null ? "" : template.inverseLabel();
+                previewLabel.setText("Example: Item A is " + selectedTemplate().forwardLabel() + " Item B");
+                return;
             }
-            return samePhraseBox.isSelected() ? firstPhrase : secondPhraseField.getText();
+            String firstPhrase = firstPhraseField.getText();
+            String secondPhrase = samePhraseBox.isSelected() ? firstPhrase : secondPhraseField.getText();
+            previewLabel.setText("Example: Item A is " + firstPhrase
+                    + " Item B; Item B " + secondPhrase + " Item A");
+        }
+
+        private RelationshipTemplate selectedTemplate() {
+            return RelationshipTemplate.forCategory(categoryBox.getValue()).getFirst();
         }
 
         private RelationshipTypeInput toInput() {
@@ -188,11 +173,11 @@ public final class RelationshipTypeDialog {
                         : RelationshipKind.DIRECTED;
                 return new RelationshipTypeInput(nameField.getText(), firstPhraseField.getText(), inverseLabel, kind);
             }
-            RelationshipTemplate template = templateBox.getValue();
+            RelationshipTemplate template = selectedTemplate();
             RelationshipKind kind = template.forwardLabel().equals(template.inverseLabel())
                     ? RelationshipKind.SYMMETRIC : RelationshipKind.DIRECTED;
-            String name = template.category() + ": " + template.forwardLabel();
-            return new RelationshipTypeInput(name, template.forwardLabel(), template.inverseLabel(), kind);
+            return new RelationshipTypeInput(template.category().toString(), template.forwardLabel(),
+                    template.inverseLabel(), kind);
         }
 
         private void setVisibleAndManaged(javafx.scene.Node node, boolean isVisible) {
