@@ -52,8 +52,9 @@ captured. A result is not verified until a human has visually checked the releva
   own name and wording, edit one label, try to add a duplicate name, delete a label, close the app,
   and relaunch it.
 - Expected result: the table has `Relationship Label` and `Example` columns. Built-in choices show
-  one concrete example without `directed`, `symmetric`, `forward`, or `inverse` terminology.
+  both possession readings without `directed`, `symmetric`, `forward`, or `inverse` terminology.
   Custom wording remains editable, validation prevents duplicate names, successful changes appear
   immediately, and undeleted labels remain after relaunch.
-- Observed result: Failed on Windows 11 on 29 August 2026. Selecting `Custom relationship…` made
-  the additional fields extend below the dialog, leaving the final field and action buttons clipped.
+- Observed result: Passed on Windows 11 on 30 August 2026 using `./gradlew.bat run`. The student
+  confirmed built-in and custom label add/edit/delete, duplicate-name validation, fixed-size dialogs,
+  matching two-reading examples in the dialogs and manager table, and persistence after relaunch.
