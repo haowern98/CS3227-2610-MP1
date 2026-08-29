@@ -43,15 +43,16 @@ captured. A result is not verified until a human has visually checked the releva
   future-date validation, and persistence after relaunch. A screenshot of lifecycle history was
   supplied in the development conversation.
 
-## UI-004: Manage saved relationships
+## UI-004: Manage relationship labels
 
-- Aim: confirm that predefined and custom saved relationship wording can be added, edited, deleted,
-  and restored from local storage.
+- Aim: confirm that built-in and custom relationship labels can be added, edited, deleted, and
+  restored from local storage.
 - Preconditions: launch the dashboard with an accessible local data directory.
-- Actions: choose `Manage Saved Relationships`, add a Storage template with `stored in / contains`,
-  add a custom relationship with its own name and wording, edit one relationship, try to add a
-  duplicate name, delete a relationship, close the app, and relaunch it.
-- Expected result: the table uses plain-language relationship wording, predefined choices populate
-  the expected phrases, custom wording remains editable, validation prevents duplicate names,
-  successful changes appear immediately, and undeleted relationships remain after relaunch.
+- Actions: choose `Manage Relationship Labels`, add the Storage label, add a custom label with its
+  own name and wording, edit one label, try to add a duplicate name, delete a label, close the app,
+  and relaunch it.
+- Expected result: the table has `Relationship Label` and `Example` columns. Built-in choices show
+  one concrete example without `directed`, `symmetric`, `forward`, or `inverse` terminology.
+  Custom wording remains editable, validation prevents duplicate names, successful changes appear
+  immediately, and undeleted labels remain after relaunch.
 - Observed result: Not run. Manual review pending on Windows 11.
