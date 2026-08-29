@@ -121,7 +121,7 @@ public final class RelationshipTypeManagerView {
     }
 
     private String formatExample(RelationshipType type) {
-        return "Item A is " + type.forwardLabel() + " Item B";
+        return RelationshipTypeDialog.formatExample(type.forwardLabel(), type.inverseLabel());
     }
 
     private void addType() {

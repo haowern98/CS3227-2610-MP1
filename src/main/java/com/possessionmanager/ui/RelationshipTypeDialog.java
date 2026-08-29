@@ -73,8 +73,12 @@ public final class RelationshipTypeDialog {
             return;
         }
         RelationshipTemplate template = RelationshipTemplate.forCategory(category).getFirst();
-        exampleLabel.setText("Example: Item A is " + template.forwardLabel() + " Item B, Item B "
-                + template.inverseLabel() + " Item A");
+        exampleLabel.setText("Example: " + formatExample(template.forwardLabel(), template.inverseLabel()));
+    }
+
+    static String formatExample(String forwardLabel, String inverseLabel) {
+        String reverseSubject = forwardLabel.equals(inverseLabel) ? "Item B is " : "Item B ";
+        return "Item A is " + forwardLabel + " Item B, " + reverseSubject + inverseLabel + " Item A";
     }
 
     private static Optional<RelationshipTypeInput> toInput(RelationshipCategory category) {
