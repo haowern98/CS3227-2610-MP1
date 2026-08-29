@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import com.possessionmanager.model.AppData;
 import com.possessionmanager.service.LifecycleEventService;
 import com.possessionmanager.service.PossessionService;
+import com.possessionmanager.service.RelationshipTypeService;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -67,6 +68,7 @@ public final class JsonStorage {
             }
             PossessionService possessions = new PossessionService(data);
             new LifecycleEventService(possessions, data.lifecycleEvents());
+            new RelationshipTypeService(data.relationshipTypes());
             return data;
         } catch (IOException | RuntimeException exception) {
             preserveCorruptFile(exception);
@@ -84,6 +86,7 @@ public final class JsonStorage {
         try {
             PossessionService possessions = new PossessionService(data);
             new LifecycleEventService(possessions, data.lifecycleEvents());
+            new RelationshipTypeService(data.relationshipTypes());
             Path parent = dataFile.getParent();
             if (parent != null) {
                 Files.createDirectories(parent);
