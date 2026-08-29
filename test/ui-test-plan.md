@@ -55,4 +55,5 @@ captured. A result is not verified until a human has visually checked the releva
   one concrete example without `directed`, `symmetric`, `forward`, or `inverse` terminology.
   Custom wording remains editable, validation prevents duplicate names, successful changes appear
   immediately, and undeleted labels remain after relaunch.
-- Observed result: Not run. Manual review pending on Windows 11.
+- Observed result: Failed on Windows 11 on 29 August 2026. Selecting `Custom relationship…` made
+  the additional fields extend below the dialog, leaving the final field and action buttons clipped.
