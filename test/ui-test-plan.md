@@ -42,3 +42,16 @@ captured. A result is not verified until a human has visually checked the releva
   confirmed the Overview and Lifecycle History screens, add/edit/delete, newest-first ordering,
   future-date validation, and persistence after relaunch. A screenshot of lifecycle history was
   supplied in the development conversation.
+
+## UI-004: Manage saved relationships
+
+- Aim: confirm that predefined and custom saved relationship wording can be added, edited, deleted,
+  and restored from local storage.
+- Preconditions: launch the dashboard with an accessible local data directory.
+- Actions: choose `Manage Saved Relationships`, add a Storage template with `stored in / contains`,
+  add a custom relationship with its own name and wording, edit one relationship, try to add a
+  duplicate name, delete a relationship, close the app, and relaunch it.
+- Expected result: the table uses plain-language relationship wording, predefined choices populate
+  the expected phrases, custom wording remains editable, validation prevents duplicate names,
+  successful changes appear immediately, and undeleted relationships remain after relaunch.
+- Observed result: Not run. Manual review pending on Windows 11.
