@@ -109,8 +109,7 @@ final class CustomRelationshipLabelDialog {
         private void refreshPreview() {
             String firstPhrase = firstPhraseField.getText();
             String secondPhrase = samePhraseBox.isSelected() ? firstPhrase : secondPhraseField.getText();
-            previewLabel.setText("Example: Item A is " + firstPhrase
-                    + " Item B; Item B " + secondPhrase + " Item A");
+            previewLabel.setText("Example: " + RelationshipTypeDialog.formatExample(firstPhrase, secondPhrase));
         }
 
         private RelationshipTypeInput toInput() {
