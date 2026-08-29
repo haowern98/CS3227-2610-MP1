@@ -88,3 +88,22 @@ model treats a missing event list in an older JSON file as empty.
 **Engineering judgement.** I used a fixed event-type enum and date-only entries rather than a
 user-configurable event schema or time-of-day fields. This supports clear history records without
 turning the app into a general activity tracker.
+
+## 6. Refining relationship labels through visual feedback
+
+**Prompt formulation.** I asked the AI to make possession relationships customizable while avoiding
+free-text labels that differ only in capitalization or wording.
+
+**Assumptions and limitations.** The first UI exposed implementation terms such as `directed`,
+`symmetric`, and inverse labels. It also changed size when custom fields appeared. Those choices
+were technically expressive but not understandable as a personal-utility interface.
+
+**Verification and evolution.** I reviewed JavaFX screenshots and rejected the confusing dialog
+terminology and resizing behavior. The revised design uses a compact built-in-label chooser, a
+separate fixed custom-label dialog, and examples that state both possession readings. Unit tests
+cover directional and same-wording examples, and I manually verified the complete label workflow on
+Windows 11.
+
+**Engineering judgement.** I kept internal direction metadata because later relationship records
+need it, but hid that implementation detail from users. The manager displays concrete sentences
+instead of graph vocabulary. Actual links between possessions remain deferred until the next slice.
