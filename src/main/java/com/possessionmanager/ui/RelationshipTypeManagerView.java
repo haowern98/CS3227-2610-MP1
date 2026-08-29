@@ -29,7 +29,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 /**
- * Displays and manages the controlled labels available for possession relationships.
+ * Displays and manages saved wording that can later connect possessions.
  */
 public final class RelationshipTypeManagerView {
     private final PossessionService possessionService;
@@ -41,11 +41,11 @@ public final class RelationshipTypeManagerView {
     private final ObservableList<RelationshipType> displayedTypes = FXCollections.observableArrayList();
 
     /**
-     * Creates a relationship-type manager with navigation back to the dashboard.
+     * Creates a saved-relationship manager with navigation back to the dashboard.
      *
      * @param possessionService service that owns possession records.
      * @param lifecycleEventService service that owns lifecycle events.
-     * @param relationshipTypeService service that owns relationship types.
+     * @param relationshipTypeService service that owns saved relationship wording.
      * @param storage local JSON storage used after each successful change.
      * @param showDashboard action that returns to the dashboard.
      */
@@ -62,7 +62,7 @@ public final class RelationshipTypeManagerView {
     }
 
     /**
-     * Creates the relationship-type manager root node.
+     * Creates the saved-relationship manager root node.
      *
      * @return manager root node.
      */
@@ -76,9 +76,9 @@ public final class RelationshipTypeManagerView {
     private VBox createHeader() {
         Button backButton = new Button("Back to Dashboard");
         backButton.setOnAction(event -> showDashboard.run());
-        Label title = new Label("Relationship Types");
+        Label title = new Label("Saved Relationships");
         title.getStyleClass().add("page-title");
-        Label subtitle = new Label("Define controlled labels for future possession relationships.");
+        Label subtitle = new Label("Choose wording you can later reuse between possessions.");
         subtitle.getStyleClass().add("page-subtitle");
         VBox header = new VBox(6, backButton, title, subtitle);
         header.setPadding(new Insets(24, 24, 16, 24));
@@ -86,14 +86,16 @@ public final class RelationshipTypeManagerView {
     }
 
     private VBox createContent() {
-        Button addButton = new Button("+ Add Type");
+        Button addButton = new Button("+ Add Saved Relationship");
         addButton.getStyleClass().add("primary-button");
         addButton.setOnAction(event -> addType());
         Button editButton = new Button("Edit Selected");
-        editButton.disableProperty().bind(Bindings.isNull(typeTable.getSelectionModel().selectedItemProperty()));
+        editButton.disableProperty().bind(
+                Bindings.isNull(typeTable.getSelectionModel().selectedItemProperty()));
         editButton.setOnAction(event -> editSelectedType());
         Button deleteButton = new Button("Delete Selected");
-        deleteButton.disableProperty().bind(Bindings.isNull(typeTable.getSelectionModel().selectedItemProperty()));
+        deleteButton.disableProperty().bind(
+                Bindings.isNull(typeTable.getSelectionModel().selectedItemProperty()));
         deleteButton.setOnAction(event -> deleteSelectedType());
         HBox actions = new HBox(10, addButton, editButton, deleteButton);
         VBox content = new VBox(12, actions, typeTable);
@@ -105,12 +107,10 @@ public final class RelationshipTypeManagerView {
     private void configureTable() {
         typeTable.setItems(displayedTypes);
         typeTable.getColumns().setAll(List.of(
-                textColumn("Name", RelationshipType::name),
-                textColumn("Kind", type -> format(type.kind())),
-                textColumn("Forward Label", RelationshipType::forwardLabel),
-                textColumn("Inverse Label", RelationshipType::inverseLabel)));
+                textColumn("Saved Relationship", RelationshipType::name),
+                textColumn("How It Reads", this::formatWording)));
         typeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-        typeTable.setPlaceholder(new Label("No relationship types yet. Add the first controlled label."));
+        typeTable.setPlaceholder(new Label("No saved relationships yet. Add a template or custom wording."));
     }
 
     private TableColumn<RelationshipType, String> textColumn(String title,
@@ -118,6 +118,13 @@ public final class RelationshipTypeManagerView {
         TableColumn<RelationshipType, String> column = new TableColumn<>(title);
         column.setCellValueFactory(cell -> new SimpleStringProperty(value.apply(cell.getValue())));
         return column;
+    }
+
+    private String formatWording(RelationshipType type) {
+        if (type.forwardLabel().equals(type.inverseLabel())) {
+            return type.forwardLabel() + " — same both ways";
+        }
+        return type.forwardLabel() + " ↔ " + type.inverseLabel();
     }
 
     private void addType() {
@@ -145,9 +152,9 @@ public final class RelationshipTypeManagerView {
 
     private boolean confirmDeletion(RelationshipType type) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Delete Relationship Type");
+        confirmation.setTitle("Delete Saved Relationship");
         confirmation.setHeaderText("Delete " + type.name() + "?");
-        confirmation.setContentText("This controlled label will be removed.");
+        confirmation.setContentText("This saved wording will be removed.");
         return confirmation.showAndWait().filter(ButtonType.OK::equals).isPresent();
     }
 
@@ -166,15 +173,10 @@ public final class RelationshipTypeManagerView {
         displayedTypes.setAll(relationshipTypeService.listTypes());
     }
 
-    private String format(Enum<?> value) {
-        String words = value.name().toLowerCase().replace('_', ' ');
-        return Character.toUpperCase(words.charAt(0)) + words.substring(1);
-    }
-
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Possession Manager");
-        alert.setHeaderText("The change could not be saved");
+        alert.setHeaderText("Saved relationship could not be saved");
         alert.setContentText(message);
         alert.showAndWait();
     }
