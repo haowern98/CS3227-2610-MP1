@@ -7,8 +7,8 @@ public enum RelationshipCategory {
     STORAGE("Storage"),
     CHARGING("Charging"),
     COMPATIBILITY("Compatibility"),
-    OWNERSHIP("Ownership"),
-    USAGE("Usage"),
+    PART_ACCESSORY("Part / accessory"),
+    USE_TOGETHER("Use together"),
     CUSTOM("Custom relationship…");
 
     private final String displayName;

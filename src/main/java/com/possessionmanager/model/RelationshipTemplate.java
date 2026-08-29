@@ -8,12 +8,10 @@ import java.util.Objects;
  */
 public enum RelationshipTemplate {
     STORED_IN(RelationshipCategory.STORAGE, "stored in", "contains"),
-    KEPT_IN(RelationshipCategory.STORAGE, "kept in", "holds"),
     CHARGED_BY(RelationshipCategory.CHARGING, "charged by", "charges"),
-    POWERED_BY(RelationshipCategory.CHARGING, "powered by", "powers"),
     COMPATIBLE_WITH(RelationshipCategory.COMPATIBILITY, "compatible with", "compatible with"),
-    BELONGS_TO(RelationshipCategory.OWNERSHIP, "belongs to", "owns"),
-    USED_FOR(RelationshipCategory.USAGE, "used for", "uses");
+    PART_OF(RelationshipCategory.PART_ACCESSORY, "part of", "has part"),
+    USED_WITH(RelationshipCategory.USE_TOGETHER, "used with", "used with");
 
     private final RelationshipCategory category;
     private final String forwardLabel;
