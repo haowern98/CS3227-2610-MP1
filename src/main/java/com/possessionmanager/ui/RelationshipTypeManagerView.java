@@ -29,7 +29,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 /**
- * Displays and manages saved wording that can later connect possessions.
+ * Displays and manages reusable labels for possession links.
  */
 public final class RelationshipTypeManagerView {
     private final PossessionService possessionService;
@@ -41,11 +41,11 @@ public final class RelationshipTypeManagerView {
     private final ObservableList<RelationshipType> displayedTypes = FXCollections.observableArrayList();
 
     /**
-     * Creates a saved-relationship manager with navigation back to the dashboard.
+     * Creates a relationship-label manager with navigation back to the dashboard.
      *
      * @param possessionService service that owns possession records.
      * @param lifecycleEventService service that owns lifecycle events.
-     * @param relationshipTypeService service that owns saved relationship wording.
+     * @param relationshipTypeService service that owns reusable relationship labels.
      * @param storage local JSON storage used after each successful change.
      * @param showDashboard action that returns to the dashboard.
      */
@@ -62,7 +62,7 @@ public final class RelationshipTypeManagerView {
     }
 
     /**
-     * Creates the saved-relationship manager root node.
+     * Creates the relationship-label manager root node.
      *
      * @return manager root node.
      */
@@ -76,9 +76,9 @@ public final class RelationshipTypeManagerView {
     private VBox createHeader() {
         Button backButton = new Button("Back to Dashboard");
         backButton.setOnAction(event -> showDashboard.run());
-        Label title = new Label("Saved Relationships");
+        Label title = new Label("Relationship Labels");
         title.getStyleClass().add("page-title");
-        Label subtitle = new Label("Choose wording you can later reuse between possessions.");
+        Label subtitle = new Label("Create reusable labels for links between possessions.");
         subtitle.getStyleClass().add("page-subtitle");
         VBox header = new VBox(6, backButton, title, subtitle);
         header.setPadding(new Insets(24, 24, 16, 24));
@@ -86,7 +86,7 @@ public final class RelationshipTypeManagerView {
     }
 
     private VBox createContent() {
-        Button addButton = new Button("+ Add Saved Relationship");
+        Button addButton = new Button("+ Add Relationship Label");
         addButton.getStyleClass().add("primary-button");
         addButton.setOnAction(event -> addType());
         Button editButton = new Button("Edit Selected");
@@ -107,10 +107,10 @@ public final class RelationshipTypeManagerView {
     private void configureTable() {
         typeTable.setItems(displayedTypes);
         typeTable.getColumns().setAll(List.of(
-                textColumn("Saved Relationship", RelationshipType::name),
-                textColumn("How It Reads", this::formatWording)));
+                textColumn("Relationship Label", RelationshipType::name),
+                textColumn("Example", this::formatExample)));
         typeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-        typeTable.setPlaceholder(new Label("No saved relationships yet. Add a template or custom wording."));
+        typeTable.setPlaceholder(new Label("No relationship labels yet. Add a built-in or custom label."));
     }
 
     private TableColumn<RelationshipType, String> textColumn(String title,
@@ -120,11 +120,8 @@ public final class RelationshipTypeManagerView {
         return column;
     }
 
-    private String formatWording(RelationshipType type) {
-        if (type.forwardLabel().equals(type.inverseLabel())) {
-            return type.forwardLabel() + " — same both ways";
-        }
-        return type.forwardLabel() + " ↔ " + type.inverseLabel();
+    private String formatExample(RelationshipType type) {
+        return "Item A is " + type.forwardLabel() + " Item B";
     }
 
     private void addType() {
@@ -152,9 +149,9 @@ public final class RelationshipTypeManagerView {
 
     private boolean confirmDeletion(RelationshipType type) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Delete Saved Relationship");
+        confirmation.setTitle("Delete Relationship Label");
         confirmation.setHeaderText("Delete " + type.name() + "?");
-        confirmation.setContentText("This saved wording will be removed.");
+        confirmation.setContentText("This reusable label will be removed.");
         return confirmation.showAndWait().filter(ButtonType.OK::equals).isPresent();
     }
 
@@ -176,7 +173,7 @@ public final class RelationshipTypeManagerView {
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Possession Manager");
-        alert.setHeaderText("Saved relationship could not be saved");
+        alert.setHeaderText("Relationship label could not be saved");
         alert.setContentText(message);
         alert.showAndWait();
     }

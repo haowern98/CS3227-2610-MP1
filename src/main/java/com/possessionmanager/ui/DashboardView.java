@@ -113,7 +113,7 @@ public final class DashboardView {
     }
 
     private HBox createTypeManagementAction() {
-        Button manageTypesButton = new Button("Manage Saved Relationships");
+        Button manageTypesButton = new Button("Manage Relationship Labels");
         manageTypesButton.setOnAction(event -> showRelationshipTypeManager.run());
         HBox managementAction = new HBox(manageTypesButton);
         managementAction.setPadding(new Insets(8, 0, 0, 0));
