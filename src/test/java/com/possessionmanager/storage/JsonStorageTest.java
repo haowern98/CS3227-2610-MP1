@@ -12,12 +12,17 @@ import com.possessionmanager.model.Possession;
 import com.possessionmanager.model.PossessionCategory;
 import com.possessionmanager.model.PossessionInput;
 import com.possessionmanager.model.PossessionStatus;
+import com.possessionmanager.model.RelationshipKind;
+import com.possessionmanager.model.RelationshipType;
 import com.possessionmanager.service.PossessionService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -73,6 +78,27 @@ class JsonStorageTest {
     }
 
     @Test
+    void savesAndLoadsRelationshipTypes() {
+        Path dataFile = temporaryDirectory.resolve("data.json");
+        RelationshipType type = relationshipType("Storage", "stored in", "contains");
+        JsonStorage storage = new JsonStorage(dataFile);
+
+        storage.save(new AppData(List.of(), List.of(), List.of(type)));
+
+        assertEquals(type, storage.load().relationshipTypes().getFirst());
+    }
+
+    @Test
+    void rejectsDuplicateRelationshipTypeNamesWhenSaving() {
+        JsonStorage storage = new JsonStorage(temporaryDirectory.resolve("data.json"));
+        AppData invalidData = new AppData(List.of(), List.of(), List.of(
+                relationshipType("Storage", "stored in", "contains"),
+                relationshipType(" storage ", "kept in", "keeps")));
+
+        assertThrows(StorageException.class, () -> storage.save(invalidData));
+    }
+
+    @Test
     void preservesCorruptFileBeforeReportingLoadFailure() throws IOException {
         Path dataFile = temporaryDirectory.resolve("data.json");
         Files.writeString(dataFile, "not valid JSON");
@@ -83,5 +109,11 @@ class JsonStorageTest {
         try (var files = Files.list(temporaryDirectory)) {
             assertTrue(files.anyMatch(path -> path.getFileName().toString().startsWith("data.corrupt-")));
         }
+    }
+
+    private RelationshipType relationshipType(String name, String forwardLabel, String inverseLabel) {
+        LocalDateTime now = LocalDateTime.of(2026, 8, 29, 12, 0);
+        return new RelationshipType(UUID.randomUUID(), name, forwardLabel, inverseLabel, RelationshipKind.DIRECTED,
+                now, now);
     }
 }
