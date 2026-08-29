@@ -7,15 +7,30 @@ import java.util.List;
  *
  * @param possessions possessions known to the application.
  * @param lifecycleEvents lifecycle events linked to possessions.
+ * @param relationshipTypes controlled labels available for possession relationships.
  */
-public record AppData(List<Possession> possessions, List<LifecycleEvent> lifecycleEvents) {
+public record AppData(
+        List<Possession> possessions,
+        List<LifecycleEvent> lifecycleEvents,
+        List<RelationshipType> relationshipTypes) {
 
     /**
-     * Creates an immutable snapshot of the supplied possessions.
+     * Creates an immutable snapshot of the supplied application data.
      */
     public AppData {
         possessions = possessions == null ? List.of() : List.copyOf(possessions);
         lifecycleEvents = lifecycleEvents == null ? List.of() : List.copyOf(lifecycleEvents);
+        relationshipTypes = relationshipTypes == null ? List.of() : List.copyOf(relationshipTypes);
+    }
+
+    /**
+     * Creates a snapshot containing possessions and their lifecycle events.
+     *
+     * @param possessions possessions known to the application.
+     * @param lifecycleEvents lifecycle events linked to possessions.
+     */
+    public AppData(List<Possession> possessions, List<LifecycleEvent> lifecycleEvents) {
+        this(possessions, lifecycleEvents, List.of());
     }
 
     /**
@@ -24,7 +39,7 @@ public record AppData(List<Possession> possessions, List<LifecycleEvent> lifecyc
      * @param possessions possessions known to the application.
      */
     public AppData(List<Possession> possessions) {
-        this(possessions, List.of());
+        this(possessions, List.of(), List.of());
     }
 
     /**
