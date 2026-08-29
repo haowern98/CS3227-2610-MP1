@@ -8,12 +8,19 @@ import org.junit.jupiter.api.Test;
 class RelationshipTemplateTest {
 
     @Test
-    void listsOnlyTemplatesForSelectedCategory() {
+    void listsOneClearTemplateForCharging() {
         List<RelationshipTemplate> chargingTemplates = RelationshipTemplate.forCategory(
                 RelationshipCategory.CHARGING);
 
-        assertEquals(List.of(RelationshipTemplate.CHARGED_BY, RelationshipTemplate.POWERED_BY),
-                chargingTemplates);
+        assertEquals(List.of(RelationshipTemplate.CHARGED_BY), chargingTemplates);
+    }
+
+    @Test
+    void listsPartAndAccessoryTemplate() {
+        List<RelationshipTemplate> partTemplates = RelationshipTemplate.forCategory(
+                RelationshipCategory.PART_ACCESSORY);
+
+        assertEquals(List.of(RelationshipTemplate.PART_OF), partTemplates);
     }
 
     @Test
