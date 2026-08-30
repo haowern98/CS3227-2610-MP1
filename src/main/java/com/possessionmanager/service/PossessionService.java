@@ -83,6 +83,18 @@ public final class PossessionService {
     }
 
     /**
+     * Permanently deletes an existing possession.
+     *
+     * @param possessionId identifier of the possession to delete.
+     * @throws ValidationException if the possession does not exist.
+     */
+    public void deletePossession(UUID possessionId) {
+        if (possessions.remove(possessionId) == null) {
+            throw new ValidationException("Possession was not found.");
+        }
+    }
+
+    /**
      * Finds a possession by its stable identifier.
      *
      * @param possessionId identifier to search for.

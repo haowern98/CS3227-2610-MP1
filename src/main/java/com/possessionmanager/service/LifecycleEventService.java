@@ -81,6 +81,17 @@ public final class LifecycleEventService {
     }
 
     /**
+     * Deletes every lifecycle event owned by an existing possession.
+     *
+     * @param possessionId identifier of the owning possession.
+     * @throws ValidationException if the possession does not exist.
+     */
+    public void deleteForPossession(UUID possessionId) {
+        requirePossession(possessionId);
+        events.values().removeIf(event -> event.possessionId().equals(possessionId));
+    }
+
+    /**
      * Lists one possession's events from newest to oldest.
      *
      * @param possessionId identifier of the possession.
