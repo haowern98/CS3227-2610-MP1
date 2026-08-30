@@ -12,13 +12,14 @@ to-do applications and then to assess a possession-relationship manager against 
 was too close to existing generic graph tools and too broad for a focused individual project.
 
 **Verification and evolution.** I compared the direction with public examples and course constraints,
-then narrowed the product to physical possessions only: possession CRUD, lifecycle history, typed
-relationships, and manually entered hardware compatibility.
+then narrowed the product to physical possessions. A later prototype explored typed relationships
+and manually entered hardware compatibility, but those features were removed when their user
+experience proved too difficult to explain for the value they added.
 
 **Engineering judgement.** I rejected automatic compatibility inference, cloud synchronization, and
 a graph-canvas editor. They would add complexity without being needed to solve the stated problem.
 
-## 2. Designing typed relationships
+## 2. Exploring and rejecting typed relationships
 
 **Prompt formulation.** I asked how users could define relationships without small wording
 differences such as `stored in` and `stored-in` breaking later queries.
@@ -26,13 +27,13 @@ differences such as `stored in` and `stored-in` breaking later queries.
 **Assumptions and limitations.** An AI suggestion alone cannot establish a usable data model. It could
 also over-generalize the product into a schema builder.
 
-**Verification and evolution.** The chosen design stores stable IDs for possessions and relationship
-types. A type is defined once and selected from a controlled list when a relationship is created.
-The planned validation rules cover duplicate type names, self-links, directed labels, and type
-deletion while in use.
+**Verification and evolution.** The prototype stored stable IDs for possessions and relationship
+types. A type was defined once and selected from a controlled list when a relationship was created.
+Repeated manual revisions still left the direction and inverse wording difficult to understand.
 
-**Engineering judgement.** User-defined relationship types remain, but free-text type entry on each
-relationship is excluded. The future implementation must prove these rules with automated tests.
+**Engineering judgement.** I removed relationship types from the simplified product instead of
+shipping a confusing feature merely to increase complexity. The current scope focuses on possession
+records, lifecycle history, search and filtering, archival, and permanent deletion.
 
 ## 3. Choosing the development foundation
 
