@@ -69,14 +69,4 @@ public record Possession(
         return new Possession(id, input.name(), input.category(), input.location(), input.status(), input.tags(),
                 input.notes(), createdAt, LocalDateTime.now());
     }
-
-    /**
-     * Returns a copy whose status is archived.
-     *
-     * @return the archived possession.
-     */
-    public Possession archive() {
-        return new Possession(id, name, category, location, PossessionStatus.ARCHIVED, tags, notes, createdAt,
-                LocalDateTime.now());
-    }
 }

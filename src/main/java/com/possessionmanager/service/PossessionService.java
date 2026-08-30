@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * Manages possession creation, updates, queries, and archival.
+ * Manages possession creation, updates, deletion, and queries.
  */
 public final class PossessionService {
     private final Map<UUID, Possession> possessions = new LinkedHashMap<>();
@@ -69,20 +69,6 @@ public final class PossessionService {
     }
 
     /**
-     * Archives a possession without deleting its record.
-     *
-     * @param possessionId identifier of the possession to archive.
-     */
-    public void archivePossession(UUID possessionId) {
-        possessions.compute(possessionId, (id, possession) -> {
-            if (possession == null) {
-                throw new ValidationException("Possession was not found.");
-            }
-            return possession.archive();
-        });
-    }
-
-    /**
      * Permanently deletes an existing possession.
      *
      * @param possessionId identifier of the possession to delete.
@@ -105,24 +91,12 @@ public final class PossessionService {
     }
 
     /**
-     * Lists non-archived possessions ordered by name.
+     * Lists possessions ordered by name.
      *
-     * @return active possessions.
+     * @return possessions ordered by name.
      */
     public List<Possession> listAll() {
-        return activePossessions().toList();
-    }
-
-    /**
-     * Lists archived possessions ordered by name.
-     *
-     * @return archived possessions.
-     */
-    public List<Possession> listArchived() {
-        return possessions.values().stream()
-                .filter(possession -> possession.status() == PossessionStatus.ARCHIVED)
-                .sorted(byName())
-                .toList();
+        return sortedPossessions().toList();
     }
 
     /**
@@ -136,7 +110,7 @@ public final class PossessionService {
         if (normalizedQuery.isEmpty()) {
             return listAll();
         }
-        return activePossessions()
+        return sortedPossessions()
                 .filter(possession -> matches(possession, normalizedQuery))
                 .toList();
     }
@@ -151,7 +125,7 @@ public final class PossessionService {
      */
     public List<Possession> query(String query, PossessionCategory category, PossessionStatus status) {
         String normalizedQuery = normalizeText(query).toLowerCase(Locale.ROOT);
-        return activePossessions()
+        return sortedPossessions()
                 .filter(possession -> normalizedQuery.isEmpty() || matches(possession, normalizedQuery))
                 .filter(possession -> category == null || possession.category() == category)
                 .filter(possession -> status == null || possession.status() == status)
@@ -166,7 +140,7 @@ public final class PossessionService {
      */
     public List<Possession> filterByCategory(PossessionCategory category) {
         Objects.requireNonNull(category, "category must not be null");
-        return activePossessions().filter(possession -> possession.category() == category).toList();
+        return sortedPossessions().filter(possession -> possession.category() == category).toList();
     }
 
     /**
@@ -177,13 +151,13 @@ public final class PossessionService {
      */
     public List<Possession> filterByStatus(PossessionStatus status) {
         Objects.requireNonNull(status, "status must not be null");
-        return activePossessions().filter(possession -> possession.status() == status).toList();
+        return sortedPossessions().filter(possession -> possession.status() == status).toList();
     }
 
     /**
      * Returns a snapshot suitable for persistence.
      *
-     * @return all possession records, including archived records.
+     * @return all possession records.
      */
     public AppData toAppData() {
         return new AppData(List.copyOf(possessions.values()));
@@ -224,9 +198,8 @@ public final class PossessionService {
                         .anyMatch(tag -> tag.toLowerCase(Locale.ROOT).contains(normalizedQuery));
     }
 
-    private java.util.stream.Stream<Possession> activePossessions() {
+    private java.util.stream.Stream<Possession> sortedPossessions() {
         return possessions.values().stream()
-                .filter(possession -> possession.status() != PossessionStatus.ARCHIVED)
                 .sorted(byName());
     }
 
