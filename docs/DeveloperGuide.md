@@ -14,9 +14,10 @@ Phase 3 has four small layers:
 - `model` contains immutable possession and lifecycle-event data, their fixed enums, and the
   persisted `AppData` snapshot.
 - `service.PossessionService` validates and normalizes input, owns records by stable UUID, and
-  provides active-list, search, filter, edit, and archive operations.
+  provides active-list, search, filter, edit, archive, and permanent-delete operations.
 - `service.LifecycleEventService` validates dated event input, verifies that each event refers to an
-  existing possession, and lists a possession's events newest first.
+  existing possession, lists a possession's events newest first, and deletes owned events before
+  their possession is removed.
 - `storage.JsonStorage` reads and writes one UTF-8 JSON file under the user's home directory. It
   writes through a temporary file, preserves a corrupt file before reporting a load failure, and
   validates possession-event references when loading or saving.
@@ -42,6 +43,10 @@ The full automated suite passed on Windows 11 on 29 August 2026 using `./gradlew
 Microsoft OpenJDK 25.0.4.1. The student also manually verified the dashboard, dialog, filtering,
 archive confirmation, lifecycle add/edit/delete, newest-first event ordering, future-date error,
 and persistence after relaunch on Windows 11. macOS and Linux runtime testing remains outstanding.
+
+Permanent possession deletion was manually verified on Windows 11 on 31 August 2026. The check
+covered confirmation text and lifecycle-event count, cancellation, immediate dashboard refresh,
+preservation of unrelated data, and persistence after relaunch.
 
 The supplied `check_mp1_structure.sh` script was also run on 29 August 2026. All required source,
 documentation, log, and directory checks passed. The only failure was the expected absence of a
