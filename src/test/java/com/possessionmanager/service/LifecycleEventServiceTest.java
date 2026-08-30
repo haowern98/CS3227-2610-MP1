@@ -64,6 +64,31 @@ class LifecycleEventServiceTest {
         assertEquals(List.of(), events.listForPossession(camera.id()));
     }
 
+    @Test
+    void deletesOnlyEventsOwnedByPossession() {
+        PossessionService possessions = new PossessionService();
+        Possession camera = addPossession(possessions, "Camera");
+        Possession laptop = addPossession(possessions, "Laptop");
+        LifecycleEventService events = new LifecycleEventService(possessions);
+        events.addEvent(camera.id(), event(LocalDate.of(2025, 1, 10), "Lens cleaned"));
+        events.addEvent(camera.id(), event(LocalDate.of(2025, 2, 4), "Lens repaired"));
+        events.addEvent(laptop.id(), event(LocalDate.of(2025, 3, 2), "Battery replaced"));
+
+        events.deleteForPossession(camera.id());
+
+        assertEquals(List.of(), events.listForPossession(camera.id()));
+        assertEquals(List.of("Battery replaced"), events.listForPossession(laptop.id()).stream()
+                .map(LifecycleEvent::description)
+                .toList());
+    }
+
+    @Test
+    void rejectsDeletingEventsForMissingPossession() {
+        LifecycleEventService events = new LifecycleEventService(new PossessionService());
+
+        assertThrows(ValidationException.class, () -> events.deleteForPossession(UUID.randomUUID()));
+    }
+
     private Possession addPossession(PossessionService possessions, String name) {
         return possessions.addPossession(new PossessionInput(name, PossessionCategory.ELECTRONICS, "Desk",
                 PossessionStatus.IN_USE, Set.of(), ""));

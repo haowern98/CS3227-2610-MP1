@@ -11,6 +11,7 @@ import com.possessionmanager.model.PossessionInput;
 import com.possessionmanager.model.PossessionStatus;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class PossessionServiceTest {
@@ -60,6 +61,26 @@ class PossessionServiceTest {
         assertEquals(PossessionStatus.ARCHIVED, service.findById(possession.id()).orElseThrow().status());
         assertFalse(service.listAll().contains(possession));
         assertEquals(1, service.listArchived().size());
+    }
+
+    @Test
+    void deletesExistingPossession() {
+        PossessionService service = new PossessionService();
+        Possession possession = service.addPossession(input("Camera", PossessionCategory.ELECTRONICS,
+                PossessionStatus.IN_USE, Set.of()));
+
+        service.deletePossession(possession.id());
+
+        assertFalse(service.findById(possession.id()).isPresent());
+        assertEquals(List.of(), service.listAll());
+        assertEquals(List.of(), service.toAppData().possessions());
+    }
+
+    @Test
+    void rejectsDeletingMissingPossession() {
+        PossessionService service = new PossessionService();
+
+        assertThrows(ValidationException.class, () -> service.deletePossession(UUID.randomUUID()));
     }
 
     @Test
