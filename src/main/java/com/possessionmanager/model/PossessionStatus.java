@@ -6,6 +6,5 @@ package com.possessionmanager.model;
 public enum PossessionStatus {
     IN_USE,
     LENT_OUT,
-    RETIRED,
-    ARCHIVED
+    RETIRED
 }
