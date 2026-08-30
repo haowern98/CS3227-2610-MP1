@@ -114,13 +114,10 @@ public final class DashboardView {
         Button editButton = new Button("Edit Selected");
         editButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
         editButton.setOnAction(event -> editSelectedPossession());
-        Button archiveButton = new Button("Archive Selected");
-        archiveButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
-        archiveButton.setOnAction(event -> archiveSelectedPossession());
         Button deleteButton = new Button("Delete Selected");
         deleteButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
         deleteButton.setOnAction(event -> deleteSelectedPossession());
-        HBox tableActions = new HBox(10, countLabel, detailsButton, editButton, archiveButton, deleteButton);
+        HBox tableActions = new HBox(10, countLabel, detailsButton, editButton, deleteButton);
         HBox.setHgrow(countLabel, Priority.ALWAYS);
         VBox content = new VBox(12, tableActions, possessionTable);
         content.setPadding(new Insets(8, 24, 24, 24));
@@ -147,7 +144,7 @@ public final class DashboardView {
                 textColumn("Status", possession -> format(possession.status())),
                 textColumn("Tags", possession -> String.join(", ", possession.tags()))));
         possessionTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-        possessionTable.setPlaceholder(new Label("No active possessions yet. Add your first item."));
+        possessionTable.setPlaceholder(new Label("No possessions yet. Add your first item."));
         possessionTable.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                 openSelectedPossession();
@@ -181,22 +178,6 @@ public final class DashboardView {
 
     private void updatePossession(Possession selected, PossessionInput input) {
         applyChange(() -> possessionService.updatePossession(selected.id(), input));
-    }
-
-    private void archiveSelectedPossession() {
-        Possession selected = possessionTable.getSelectionModel().getSelectedItem();
-        if (selected == null || !confirmArchive(selected)) {
-            return;
-        }
-        applyChange(() -> possessionService.archivePossession(selected.id()));
-    }
-
-    private boolean confirmArchive(Possession possession) {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Archive Possession");
-        confirmation.setHeaderText("Archive " + possession.name() + "?");
-        confirmation.setContentText("The record remains saved but no longer appears in active results.");
-        return confirmation.showAndWait().filter(ButtonType.OK::equals).isPresent();
     }
 
     private void deleteSelectedPossession() {
@@ -239,7 +220,7 @@ public final class DashboardView {
     private void refreshTable() {
         displayedPossessions.setAll(possessionService.query(searchField.getText(), categoryFilter.getValue(),
                 statusFilter.getValue()));
-        countLabel.setText(displayedPossessions.size() + " active possession(s)");
+        countLabel.setText(displayedPossessions.size() + " possession(s)");
     }
 
     private void clearFilters() {
