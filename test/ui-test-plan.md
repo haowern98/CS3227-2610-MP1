@@ -42,3 +42,18 @@ captured. A result is not verified until a human has visually checked the releva
   confirmed the Overview and Lifecycle History screens, add/edit/delete, newest-first ordering,
   future-date validation, and persistence after relaunch. A screenshot of lifecycle history was
   supplied in the development conversation.
+
+## UI-004: Permanently delete a possession
+
+- Aim: confirm that permanent deletion removes the selected possession and its lifecycle history.
+- Preconditions: launch the dashboard with two possessions. Add two lifecycle events to the first
+  possession and one lifecycle event to the second possession.
+- Actions: confirm `Delete Selected` is disabled without a selection. Select the first possession,
+  choose `Delete Selected`, inspect the lifecycle-event count, cancel, reopen the confirmation,
+  confirm deletion, close the app, and relaunch it.
+- Expected result: cancellation preserves all data. Confirmation reports two lifecycle events,
+  permanently removes the selected possession and those events, immediately refreshes the dashboard,
+  preserves the second possession and its event, and remains effective after relaunch.
+- Observed result: Passed on Windows 11 on 31 August 2026 using `./gradlew.bat run`. The student
+  confirmed the disabled state, correct count of two lifecycle events, cancellation, immediate
+  dashboard removal, preservation of unrelated data, and persistence after relaunch.
