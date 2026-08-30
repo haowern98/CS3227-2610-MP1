@@ -21,6 +21,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -37,6 +38,8 @@ import javafx.scene.layout.VBox;
  * Displays the possession dashboard and its CRUD actions.
  */
 public final class DashboardView {
+    private static final double DELETION_DIALOG_WIDTH = 640;
+
     private final PossessionService possessionService;
     private final LifecycleEventService lifecycleEventService;
     private final JsonStorage storage;
@@ -114,7 +117,10 @@ public final class DashboardView {
         Button archiveButton = new Button("Archive Selected");
         archiveButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
         archiveButton.setOnAction(event -> archiveSelectedPossession());
-        HBox tableActions = new HBox(10, countLabel, detailsButton, editButton, archiveButton);
+        Button deleteButton = new Button("Delete Selected");
+        deleteButton.disableProperty().bind(Bindings.isNull(possessionTable.getSelectionModel().selectedItemProperty()));
+        deleteButton.setOnAction(event -> deleteSelectedPossession());
+        HBox tableActions = new HBox(10, countLabel, detailsButton, editButton, archiveButton, deleteButton);
         HBox.setHgrow(countLabel, Priority.ALWAYS);
         VBox content = new VBox(12, tableActions, possessionTable);
         content.setPadding(new Insets(8, 24, 24, 24));
@@ -191,6 +197,33 @@ public final class DashboardView {
         confirmation.setHeaderText("Archive " + possession.name() + "?");
         confirmation.setContentText("The record remains saved but no longer appears in active results.");
         return confirmation.showAndWait().filter(ButtonType.OK::equals).isPresent();
+    }
+
+    private void deleteSelectedPossession() {
+        Possession selected = possessionTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            return;
+        }
+        int eventCount = lifecycleEventService.listForPossession(selected.id()).size();
+        if (confirmDeletion(selected, eventCount)) {
+            applyChange(() -> deletePossessionAndEvents(selected));
+        }
+    }
+
+    private boolean confirmDeletion(Possession possession, int eventCount) {
+        ButtonType deleteButton = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "", deleteButton, ButtonType.CANCEL);
+        confirmation.setTitle("Delete Possession");
+        confirmation.setHeaderText("Delete " + possession.name() + " permanently?");
+        confirmation.setContentText("This will permanently delete " + eventCount
+                + " lifecycle event(s). This cannot be undone.");
+        confirmation.getDialogPane().setPrefWidth(DELETION_DIALOG_WIDTH);
+        return confirmation.showAndWait().filter(deleteButton::equals).isPresent();
+    }
+
+    private void deletePossessionAndEvents(Possession possession) {
+        lifecycleEventService.deleteForPossession(possession.id());
+        possessionService.deletePossession(possession.id());
     }
 
     private void applyChange(Runnable change) {
