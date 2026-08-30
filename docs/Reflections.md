@@ -33,7 +33,7 @@ Repeated manual revisions still left the direction and inverse wording difficult
 
 **Engineering judgement.** I removed relationship types from the simplified product instead of
 shipping a confusing feature merely to increase complexity. The current scope focuses on possession
-records, lifecycle history, search and filtering, archival, and permanent deletion.
+records, lifecycle history, search and filtering, and permanent deletion.
 
 ## 3. Choosing the development foundation
 

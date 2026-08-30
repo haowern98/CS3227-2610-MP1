@@ -20,7 +20,7 @@ The application will not be a generic entity database, graph editor, cloud servi
 - A relationship type owns its forward label, inverse label, and whether it is directed or symmetric.
 - The relationship form chooses a valid displayed label such as `stored in` or `contains`; it does not expose a raw direction setting.
 - Compatibility information is manually entered. The application will not query hardware catalogues or infer electrical compatibility.
-- A possession with linked history or relationships is archived rather than silently deleted.
+- Permanent deletion requires confirmation and removes the possession's lifecycle history.
 
 ## Git Workflow
 
@@ -46,9 +46,9 @@ All Java files will be under `src/main/java/<base-package>/`. The final base pac
 
 | Planned file | Key responsibilities and public methods |
 | --- | --- |
-| `model/Possession.java` | Stores ID, name, category, status, tags, notes, and timestamps. Methods: `create(...)`, `updateDetails(...)`, `archive()`, `restore()`. |
+| `model/Possession.java` | Stores ID, name, category, status, tags, notes, and timestamps. Methods: `create(...)`, `updateDetails(...)`. |
 | `model/PossessionCategory.java` | Defines the fixed categories `ELECTRONICS`, `ACCESSORIES`, `HOBBY`, `BOOKS`, `TRAVEL`, and `OTHER`. |
-| `model/PossessionStatus.java` | Defines `IN_USE`, `LENT_OUT`, `RETIRED`, and `ARCHIVED`. |
+| `model/PossessionStatus.java` | Defines `IN_USE`, `LENT_OUT`, and `RETIRED`. |
 | `model/LifecycleEvent.java` | Stores event ID, possession ID, date, type, description, and notes. Methods: `create(...)`, `update(...)`. |
 | `model/LifecycleEventType.java` | Defines `PURCHASE`, `ADDED`, `MAINTENANCE`, `REPAIR`, `LOAN`, `RETURN`, `UPGRADE`, `RETIRED`, and `OTHER`. |
 | `model/RelationshipType.java` | Stores ID, forward label, inverse label, and kind. Methods: `create(...)`, `rename(...)`, `updateLabels(...)`. |
@@ -62,7 +62,7 @@ All Java files will be under `src/main/java/<base-package>/`. The final base pac
 
 | Planned file | Key responsibilities and public methods |
 | --- | --- |
-| `service/PossessionService.java` | Possession CRUD and querying. Methods: `addPossession(...)`, `updatePossession(...)`, `archivePossession(...)`, `findById(...)`, `search(...)`, `filterByCategory(...)`, `filterByStatus(...)`, `listAll()`. |
+| `service/PossessionService.java` | Possession CRUD and querying. Methods: `addPossession(...)`, `updatePossession(...)`, `deletePossession(...)`, `findById(...)`, `search(...)`, `filterByCategory(...)`, `filterByStatus(...)`, `listAll()`. |
 | `service/LifecycleEventService.java` | Lifecycle-event CRUD. Methods: `addEvent(...)`, `updateEvent(...)`, `deleteEvent(...)`, `listForPossession(...)`. |
 | `service/RelationshipTypeService.java` | Relationship-type CRUD and validation. Methods: `addType(...)`, `updateType(...)`, `deleteType(...)`, `listTypes()`, `findType(...)`. |
 | `service/RelationshipService.java` | Relationship CRUD and relation-label resolution. Methods: `addRelationship(...)`, `updateRelationship(...)`, `deleteRelationship(...)`, `listForPossession(...)`, `hasRelationships(...)`. |
@@ -88,7 +88,7 @@ All Java files will be under `src/main/java/<base-package>/`. The final base pac
 | `ui/AppServices.java` | Holds the shared services supplied to JavaFX controllers. |
 | `ui/ViewNavigator.java` | Switches primary views. Methods: `showDashboard()`, `showPossessionDetail(UUID)`, `showError(...)`. |
 | `ui/DashboardController.java` | Controls the dashboard. Methods: `initialize()`, `refreshTable()`, `onSearchChanged()`, `onCategorySelected()`, `onQuickFilterSelected()`, `onAddPossession()`, `onPossessionSelected()`. |
-| `ui/PossessionDetailController.java` | Controls the detail view and tabs. Methods: `setPossession(UUID)`, `refreshOverview()`, `refreshLifecycleEvents()`, `refreshRelationships()`, `refreshCompatibility()`, `onEditPossession()`, `onArchivePossession()`. |
+| `ui/PossessionDetailController.java` | Controls the detail view and tabs. Methods: `setPossession(UUID)`, `refreshOverview()`, `refreshLifecycleEvents()`, `refreshRelationships()`, `refreshCompatibility()`, `onEditPossession()`, `onDeletePossession()`. |
 | `ui/PossessionDialogController.java` | Controls add/edit possession input. Methods: `setPossessionForEdit(...)`, `onSave()`, `onCancel()`. |
 | `ui/LifecycleEventDialogController.java` | Controls add/edit lifecycle-event input. Methods: `setEventForEdit(...)`, `onSave()`, `onCancel()`. |
 | `ui/RelationshipDialogController.java` | Controls add/edit relationship input. Methods: `setPossession(...)`, `setRelationshipForEdit(...)`, `refreshRelationshipLabels()`, `onSave()`, `onCancel()`. |
@@ -119,7 +119,7 @@ All tests will be under `src/test/java/<base-package>/`.
 
 | Planned file | Required coverage |
 | --- | --- |
-| `service/PossessionServiceTest.java` | Creation, editing, archiving, searching, and filters. |
+| `service/PossessionServiceTest.java` | Creation, editing, deletion, searching, and filters. |
 | `service/LifecycleEventServiceTest.java` | Possession ownership and chronological event ordering. |
 | `service/RelationshipTypeServiceTest.java` | Case-insensitive duplicate prevention, type-kind rules, and deletion protection. |
 | `service/RelationshipServiceTest.java` | Self-link prevention, duplicate prevention, correct inverse display labels, and deletion. |
@@ -145,7 +145,7 @@ All tests will be under `src/test/java/<base-package>/`.
 4. A directed relationship type has distinct forward and inverse labels; a symmetric type has one shared label.
 5. Renaming a relationship type updates its displayed labels everywhere.
 6. A relationship type in use cannot be deleted until its relationships are deleted or migrated.
-7. A possession with lifecycle history or relationships cannot be silently deleted; it is archived instead.
+7. Deleting a possession requires confirmation and removes its lifecycle history.
 8. Lifecycle events and compatibility entries must belong to an existing possession.
 9. Invalid dates, empty required names, and corrupt saved data produce clear errors without overwriting valid data.
 
