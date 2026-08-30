@@ -27,14 +27,13 @@ The command opens the Possession Manager dashboard.
 ## Managing possessions
 
 Use **Add Possession** to record a physical item. A name is required; category, location, status,
-comma-separated tags, and notes are optional. Select a row and choose **Edit Selected** or
-**Archive Selected** to manage an existing item. Choose **View Details** or double-click a row to
-open its detail screen. Choose **Delete Selected** to permanently remove an item after reviewing
-the confirmation message. Permanent deletion also removes that item's lifecycle events and cannot
-be undone.
+comma-separated tags, and notes are optional. Select a row and choose **Edit Selected** to change an
+existing item. Choose **View Details** or double-click a row to open its detail screen. Choose
+**Delete Selected** to permanently remove an item after reviewing the confirmation message.
+Permanent deletion also removes that item's lifecycle events and cannot be undone.
 
 Use the search box to match names and tags. Category and status filters work together with search.
-Archived items are preserved in the data file but do not appear in active dashboard results.
+The available statuses are **In use**, **Lent out**, and **Retired**.
 
 ## Recording lifecycle history
 
@@ -58,13 +57,15 @@ From the repository root, run:
 ./gradlew test
 ```
 
-The suite covers stylesheet packaging, possession validation, querying, archival and deletion,
+The suite covers stylesheet packaging, possession validation, querying and deletion,
 lifecycle-event validation, ordering and deletion, JSON round trips, missing data files, and
 corrupt-data backup handling.
 
 ## Data and limitations
 
-Data is saved after each successful addition, edit, archive, deletion, or lifecycle-event change to
+Data is saved after each successful addition, edit, deletion, or lifecycle-event change to
 `~/.possession-manager/data.json`, where `~` is the current user's home directory on Windows,
 macOS, or Linux. If the file is corrupt, the app preserves it as a timestamped `data.corrupt-*.json`
 backup and displays an error. Cross-platform runtime testing is still required.
+
+Development data created by an earlier version with an `Archived` status is not migrated.
