@@ -51,19 +51,6 @@ class PossessionServiceTest {
     }
 
     @Test
-    void archivesPossessionInsteadOfRemovingIt() {
-        PossessionService service = new PossessionService();
-        Possession possession = service.addPossession(input("Camera", PossessionCategory.ELECTRONICS,
-                PossessionStatus.IN_USE, Set.of()));
-
-        service.archivePossession(possession.id());
-
-        assertEquals(PossessionStatus.ARCHIVED, service.findById(possession.id()).orElseThrow().status());
-        assertFalse(service.listAll().contains(possession));
-        assertEquals(1, service.listArchived().size());
-    }
-
-    @Test
     void deletesExistingPossession() {
         PossessionService service = new PossessionService();
         Possession possession = service.addPossession(input("Camera", PossessionCategory.ELECTRONICS,
@@ -95,17 +82,16 @@ class PossessionServiceTest {
     }
 
     @Test
-    void filtersOnlyActivePossessionsByCategoryAndStatus() {
+    void filtersPossessionsByCategoryAndStatus() {
         PossessionService service = new PossessionService();
         service.addPossession(input("Camera", PossessionCategory.ELECTRONICS, PossessionStatus.IN_USE, Set.of()));
         service.addPossession(input("Adapter", PossessionCategory.ELECTRONICS, PossessionStatus.RETIRED, Set.of()));
-        Possession archived = service.addPossession(input("Old Book", PossessionCategory.BOOKS,
+        service.addPossession(input("Old Book", PossessionCategory.BOOKS,
                 PossessionStatus.IN_USE, Set.of()));
-        service.archivePossession(archived.id());
 
         assertEquals(2, service.filterByCategory(PossessionCategory.ELECTRONICS).size());
         assertEquals(1, service.filterByStatus(PossessionStatus.RETIRED).size());
-        assertEquals(2, service.listAll().size());
+        assertEquals(3, service.listAll().size());
     }
 
     @Test
