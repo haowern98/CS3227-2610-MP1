@@ -40,7 +40,8 @@ The available statuses are **In use**, **Lent out**, and **Retired**.
 Open a possession's detail screen to see its location, tags, notes, and lifecycle history together.
 Use **Add Event** to record a purchase, maintenance activity, loan, return, repair, upgrade,
 retirement, or other dated event. Each event needs an event type, date, and description; notes are
-optional. Dates after today are rejected to avoid accidental future history.
+optional. Choose dates using the calendar button; manual date entry is disabled. Dates after today
+are rejected to avoid accidental future history.
 
 Select an event to edit or delete it. Events appear newest first. All successful event changes are
 saved with the possession data and remain after the application is relaunched.
