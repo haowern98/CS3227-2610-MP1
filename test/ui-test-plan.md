@@ -60,3 +60,15 @@ captured. A result is not verified until a human has visually checked the releva
 - Observed result: Passed on Windows 11 on 31 August 2026 using `./gradlew.bat run`. The student
   confirmed the disabled state, correct count of two lifecycle events, cancellation, immediate
   dashboard removal, preservation of unrelated data, and persistence after relaunch.
+
+## UI-005: Align possession detail tabs
+
+- Aim: confirm the possession detail tabs align with the header without a full-width gray bar.
+- Preconditions: launch the dashboard with at least one possession.
+- Actions: open the possession's detail screen and compare the left edges of `Back to Dashboard` and
+  `Overview`. Inspect the area to the right of `Lifecycle History`.
+- Expected result: the `Overview` tab begins directly below the left edge of `Back to Dashboard`.
+  The tab-header background is transparent, with no gray bar extending across the window.
+- Observed result: Passed on Windows 11 on 31 August 2026 using `./gradlew.bat run`. The student
+  supplied a screenshot confirming exact left-edge alignment and removal of the gray header bar;
+  both tabs remained visible and usable.
