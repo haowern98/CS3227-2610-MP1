@@ -35,6 +35,10 @@ Windows. `ApplicationResourceTest` is a foundation smoke test for runtime-resour
 `PersistentChangeTest` verifies rollback for possession and lifecycle-event additions, edits, and
 deletions, including cascade deletion and a successful save after an earlier failure.
 
+GitHub Actions runs `clean check javadoc assemble` with Java 25 on Windows, Linux, and macOS for
+every push and pull request. A separate documentation job checks required files, Markdown
+formatting, and unresolved merge markers. Failed test reports are retained for seven days.
+
 Manual runtime smoke check recorded on 29 August 2026:
 
 - Platform: Windows 11 x64.
@@ -60,8 +64,8 @@ release JAR; creating a tested self-contained release is deferred until the fina
 
 This project uses the JavaFX Gradle Plugin, JavaFX, Gradle, JUnit Jupiter, and Gson 2.13.2 for
 JSON serialization. The project-local `present-changes-visually` workflow is adapted from the
-SE-EDU skill at https://github.com/se-edu/skill-present-changes-visually. No third-party
-application code has been copied into the repository.
+[SE-EDU skill](https://github.com/se-edu/skill-present-changes-visually). No third-party application
+code has been copied into the repository.
 
 I used Codex to help plan the application, set up the initial build, draft documentation, and run
 verification commands. I reviewed the output and remain responsible for the submitted content and
