@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -63,6 +64,7 @@ public final class LifecycleEventDialog {
         private Fields(LifecycleEvent event) {
             typeBox.getItems().setAll(LifecycleEventType.values());
             datePicker.setEditable(false);
+            datePicker.getEditor().setCursor(Cursor.DEFAULT);
             datePicker.getEditor().setOnMouseClicked(mouseEvent -> datePicker.show());
             notesArea.setPrefRowCount(3);
             populate(event);
