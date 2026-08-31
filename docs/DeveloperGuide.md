@@ -18,6 +18,8 @@ Phase 3 has four small layers:
 - `service.LifecycleEventService` validates dated event input, verifies that each event refers to an
   existing possession, lists a possession's events newest first, and deletes owned events before
   their possession is removed.
+- `service.PersistentChange` snapshots both services before a mutation, saves their combined state,
+  and restores the existing service objects if validation or storage fails.
 - `storage.JsonStorage` reads and writes one UTF-8 JSON file under the user's home directory. It
   writes through a temporary file, preserves a corrupt file before reporting a load failure, and
   validates possession-event references when loading or saving.
@@ -30,6 +32,8 @@ The planned file map and future-phase responsibilities are maintained in `Projec
 
 Run the automated test suite with `./gradlew test` on macOS/Linux or `./gradlew.bat test` on
 Windows. `ApplicationResourceTest` is a foundation smoke test for runtime-resource packaging.
+`PersistentChangeTest` verifies rollback for possession and lifecycle-event additions, edits, and
+deletions, including cascade deletion and a successful save after an earlier failure.
 
 Manual runtime smoke check recorded on 29 August 2026:
 

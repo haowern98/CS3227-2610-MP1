@@ -67,6 +67,7 @@ corrupt-data backup handling.
 Data is saved after each successful addition, edit, deletion, or lifecycle-event change to
 `~/.possession-manager/data.json`, where `~` is the current user's home directory on Windows,
 macOS, or Linux. If the file is corrupt, the app preserves it as a timestamped `data.corrupt-*.json`
-backup and displays an error. Cross-platform runtime testing is still required.
+backup and displays an error. If a change cannot be saved, the app discards that change and keeps
+the previous data. Cross-platform runtime testing is still required.
 
 Development data created by an earlier version with an `Archived` status is not migrated.
