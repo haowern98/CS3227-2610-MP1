@@ -1,0 +1,43 @@
+@startuml
+title Possession Manager Architecture
+
+!pragma layout smetana
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+top to bottom direction
+
+actor User
+
+component "App\nJavaFX entry point and navigation" as App
+
+package "Presentation" {
+    component "UI\nDashboard, detail view, and dialogs" as UI
+}
+
+package "Application and domain" {
+    component "Services\nValidation, querying, integrity,\nand persistent changes" as Services
+    component "Model\nImmutable records, enums,\nand AppData snapshots" as Model
+}
+
+package "Persistence" {
+    component "JSON storage\nLoad, validate, save, and recover" as Storage
+    database "Local data.json" as DataFile
+}
+
+User --> UI : interacts with
+App --> UI : creates and navigates
+App --> Services : creates shared instances
+App --> Storage : loads startup data
+UI --> Services : queries and changes data
+UI --> Model : displays records
+Services --> Model : owns and returns records
+Services --> Storage : saves complete snapshots
+Storage --> Model : serializes AppData
+Storage --> DataFile : reads and writes
+
+@enduml

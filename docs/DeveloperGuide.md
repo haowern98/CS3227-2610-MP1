@@ -120,9 +120,46 @@ macOS or Linux:
 
 ## 3. Architecture
 
+Possession Manager uses a small layered architecture. `App` initializes the application and keeps
+the shared service and storage instances used across screen changes. JavaFX views handle user
+interaction, services own application state and domain rules, model records represent that state,
+and the storage component persists complete `AppData` snapshots to a local JSON file.
+
+![Possession Manager architecture and component dependencies](diagrams/architecture.png)
+
+The arrows in the diagram point from a component to another component it uses. The architecture is
+kept within one desktop process; the JSON file is the only external data boundary.
+
 ### Component responsibilities
 
+- **`App`** loads startup data, constructs the shared services, owns the JavaFX `Scene`, and changes
+  its root between the dashboard and possession-detail views.
+- **UI** contains `DashboardView`, `PossessionDetailView`, `PossessionDialog`, and
+  `LifecycleEventDialog`. It renders model data, collects input, invokes services, and presents
+  validation or storage errors.
+- **Services** contains `PossessionService`, `LifecycleEventService`, and `PersistentChange`.
+  Together they validate and normalize input, answer queries, preserve possession-event integrity,
+  and coordinate mutation with persistence.
+- **Model** contains immutable possession and lifecycle-event records, their input records and
+  enums, and `AppData`, which represents one complete persistence snapshot.
+- **JSON storage** contains `JsonStorage`, which reads, validates, and safely replaces the data
+  file, and `AppDataFile`, which resolves its location below the user's home directory.
+
 ### Application startup
+
+At startup, `App` obtains the platform-independent data path from `AppDataFile` and asks
+`JsonStorage` to load it. The returned `AppData` initializes `PossessionService`, after which
+`LifecycleEventService` is initialized with the same possession service and the saved events. This
+shared reference allows lifecycle operations to verify that every event belongs to an existing
+possession.
+
+`App` then creates one JavaFX scene, applies the shared stylesheet, and displays the dashboard.
+Navigation replaces the scene root instead of creating a new window or recreating the services, so
+both main views operate on the same in-memory state.
+
+If loading fails, `App` reports the storage error and continues with an empty `AppData` snapshot.
+Corrupt-file preservation is handled inside `JsonStorage` and is explained in
+[Startup and corrupt-data recovery](#startup-and-corrupt-data-recovery).
 
 ## 4. Design
 

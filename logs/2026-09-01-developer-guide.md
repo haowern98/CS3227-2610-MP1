@@ -24,3 +24,11 @@ Codex checked the application entry point, Gradle build, wrapper configuration, 
 User Guide before drafting the introduction and development setup. The documented commands use the
 repository's Gradle wrapper and distinguish Windows from macOS and Linux. No system Gradle
 installation is required.
+
+## Architecture
+
+Codex traced the dependencies from `App` through the JavaFX views, services, model records,
+storage classes, and local JSON file. The architecture section presents those components at a
+high level and records the startup flow. A PlantUML component diagram was created from the current
+source; lower-level classes and calls were omitted for readability and will be covered by later
+design diagrams.
