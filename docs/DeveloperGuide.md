@@ -1,72 +1,93 @@
 # Possession Manager Developer Guide
 
-## Architecture
+## Table of Contents
 
-The foundation uses Gradle 9.7.1, Java 25, JavaFX 25.0.4, and JUnit Jupiter. The Gradle wrapper
-is the supported project entry point; no system Gradle installation is required.
+- [1. Introduction](#1-introduction)
+- [2. Setting Up](#2-setting-up)
+- [3. Architecture](#3-architecture)
+- [4. Design](#4-design)
+- [5. Implementation](#5-implementation)
+- [6. Design Considerations](#6-design-considerations)
+- [7. Testing](#7-testing)
+- [8. Instructions for Manual Testing](#8-instructions-for-manual-testing)
+- [9. Acknowledgements](#9-acknowledgements)
 
-`com.possessionmanager.App` is the JavaFX entry point. It loads local data, creates shared services,
-navigates between the dashboard and possession detail screen, and loads the shared stylesheet from
-`src/main/resources/com/possessionmanager/app.css`.
+## 1. Introduction
 
-Phase 3 has four small layers:
+### Purpose
 
-- `model` contains immutable possession and lifecycle-event data, their fixed enums, and the
-  persisted `AppData` snapshot.
-- `service.PossessionService` validates and normalizes input, owns records by stable UUID, and
-  provides list, search, filter, edit, and permanent-delete operations.
-- `service.LifecycleEventService` validates dated event input, verifies that each event refers to an
-  existing possession, lists a possession's events newest first, and deletes owned events before
-  their possession is removed.
-- `service.PersistentChange` snapshots both services before a mutation, saves their combined state,
-  and restores the existing service objects if validation or storage fails.
-- `storage.JsonStorage` reads and writes one UTF-8 JSON file under the user's home directory. It
-  writes through a temporary file, preserves a corrupt file before reporting a load failure, and
-  validates possession-event references when loading or saving.
-- `ui.DashboardView`, `ui.PossessionDetailView`, and their dialogs use the services and storage
-  without embedding domain validation in table controls.
+### Intended audience
 
-The planned file map and future-phase responsibilities are maintained in `Project_plans.md`.
+### Product scope
 
-## Testing
+## 2. Setting Up
 
-Run the automated test suite with `./gradlew test` on macOS/Linux or `./gradlew.bat test` on
-Windows. `ApplicationResourceTest` is a foundation smoke test for runtime-resource packaging.
-`PersistentChangeTest` verifies rollback for possession and lifecycle-event additions, edits, and
-deletions, including cascade deletion and a successful save after an earlier failure.
+### Prerequisites
 
-GitHub Actions runs `clean check javadoc assemble` with Java 25 on Windows, Linux, and macOS for
-every push and pull request. A separate documentation job checks required files, Markdown
-formatting, and unresolved merge markers. Failed test reports are retained for seven days.
+### Importing and running the project
 
-Manual runtime smoke check recorded on 29 August 2026:
+### Running automated tests
 
-- Platform: Windows 11 x64.
-- JDK: Microsoft Build of OpenJDK 25.0.4.1.
-- Command: `./gradlew.bat run`.
-- Result: JavaFX started without a Gradle error or Java native-access warning. The process remained
-  active, as expected while the application window was open, and was then intentionally stopped.
+## 3. Architecture
 
-The full automated suite passed on Windows 11 on 29 August 2026 using `./gradlew.bat test` with
-Microsoft OpenJDK 25.0.4.1. The student also manually verified the dashboard, dialog, filtering,
-lifecycle add/edit/delete, newest-first event ordering, future-date error, and persistence after
-relaunch on Windows 11. macOS and Linux runtime testing remains outstanding.
+### Component responsibilities
 
-Permanent possession deletion was manually verified on Windows 11 on 31 August 2026. The check
-covered confirmation text and lifecycle-event count, cancellation, immediate dashboard refresh,
-preservation of unrelated data, and persistence after relaunch.
+### Application startup
 
-The supplied `check_mp1_structure.sh` script was also run on 29 August 2026. All required source,
-documentation, log, and directory checks passed. The only failure was the expected absence of a
-release JAR; creating a tested self-contained release is deferred until the final release phase.
+## 4. Design
 
-## Reuse and AI assistance
+### UI component
 
-This project uses the JavaFX Gradle Plugin, JavaFX, Gradle, JUnit Jupiter, and Gson 2.13.2 for
-JSON serialization. The project-local `present-changes-visually` workflow is adapted from the
-[SE-EDU skill](https://github.com/se-edu/skill-present-changes-visually). No third-party application
-code has been copied into the repository.
+### Model component
 
-I used Codex to help plan the application, set up the initial build, draft documentation, and run
-verification commands. I reviewed the output and remain responsible for the submitted content and
-quality. Substantive interactions are summarized in `logs/`.
+### Service component
+
+### Storage component
+
+## 5. Implementation
+
+### Possession querying
+
+### Lifecycle-event integrity and cascade deletion
+
+### Persistent changes and rollback
+
+### Startup and corrupt-data recovery
+
+## 6. Design Considerations
+
+### Local JSON persistence
+
+### Immutable domain records and stable identifiers
+
+### Restoring service contents during rollback
+
+## 7. Testing
+
+### Automated testing
+
+### GUI testing
+
+### Cross-platform continuous integration
+
+## 8. Instructions for Manual Testing
+
+### Test environment and launch
+
+### Managing possessions
+
+### Searching and filtering
+
+### Managing lifecycle events
+
+### Recovering from a save failure
+
+### Recovering from invalid data
+
+## 9. Acknowledgements
+
+### Libraries and tools
+
+### Reused or inspired material
+
+### AI assistance
