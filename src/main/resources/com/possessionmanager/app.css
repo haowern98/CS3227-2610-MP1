@@ -19,10 +19,7 @@
     -fx-font-weight: bold;
 }
 
-.detail-tabs > .tab-header-area {
-    -fx-padding: 0 0 0 24;
-}
-
-.detail-tabs > .tab-header-area > .tab-header-background {
-    -fx-background-color: transparent;
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
 }

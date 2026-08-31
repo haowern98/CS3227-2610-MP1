@@ -16,16 +16,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -34,6 +36,8 @@ import javafx.scene.layout.VBox;
  * Displays one possession and its lifecycle history.
  */
 public final class PossessionDetailView {
+    private static final double NOTES_HEIGHT = 84;
+
     private final PossessionService possessionService;
     private final LifecycleEventService lifecycleEventService;
     private final JsonStorage storage;
@@ -72,7 +76,7 @@ public final class PossessionDetailView {
 
         BorderPane root = new BorderPane();
         root.setTop(createHeader());
-        root.setCenter(createTabs());
+        root.setCenter(createContent());
         return root;
     }
 
@@ -88,28 +92,54 @@ public final class PossessionDetailView {
         return header;
     }
 
-    private TabPane createTabs() {
-        Tab overviewTab = new Tab("Overview", createOverview());
-        Tab lifecycleTab = new Tab("Lifecycle History", createLifecycleHistory());
-        overviewTab.setClosable(false);
-        lifecycleTab.setClosable(false);
-        TabPane tabs = new TabPane(overviewTab, lifecycleTab);
-        tabs.getStyleClass().add("detail-tabs");
-        return tabs;
+    private VBox createContent() {
+        Label lifecycleHeading = new Label("Lifecycle History");
+        lifecycleHeading.getStyleClass().add("section-title");
+        VBox lifecycleHistory = createLifecycleHistory();
+        VBox content = new VBox(16, createPossessionDetails(), lifecycleHeading, lifecycleHistory);
+        content.setPadding(new Insets(0, 24, 24, 24));
+        VBox.setVgrow(lifecycleHistory, Priority.ALWAYS);
+        return content;
     }
 
-    private VBox createOverview() {
-        VBox overview = new VBox(10,
-                detailLabel("Location", emptyFallback(possession.location())),
-                detailLabel("Status", format(possession.status())),
-                detailLabel("Tags", emptyFallback(String.join(", ", possession.tags()))),
-                detailLabel("Notes", emptyFallback(possession.notes())));
-        overview.setPadding(new Insets(20));
-        return overview;
+    private GridPane createPossessionDetails() {
+        GridPane details = new GridPane();
+        details.setHgap(16);
+        details.setVgap(10);
+        details.getColumnConstraints().addAll(createLabelColumn(), createValueColumn());
+        details.addRow(0, new Label("Location"), new Label(emptyFallback(possession.location())));
+        details.addRow(1, new Label("Tags"),
+                new Label(emptyFallback(String.join(", ", possession.tags()))));
+
+        Label notesLabel = new Label("Notes");
+        GridPane.setValignment(notesLabel, VPos.TOP);
+        TextArea notesArea = createNotesArea();
+        details.addRow(2, notesLabel, notesArea);
+        return details;
     }
 
-    private Label detailLabel(String name, String value) {
-        return new Label(name + ": " + value);
+    private ColumnConstraints createLabelColumn() {
+        ColumnConstraints labelColumn = new ColumnConstraints();
+        labelColumn.setMinWidth(64);
+        return labelColumn;
+    }
+
+    private ColumnConstraints createValueColumn() {
+        ColumnConstraints valueColumn = new ColumnConstraints();
+        valueColumn.setHgrow(Priority.ALWAYS);
+        return valueColumn;
+    }
+
+    private TextArea createNotesArea() {
+        TextArea notesArea = new TextArea(emptyFallback(possession.notes()));
+        notesArea.setEditable(false);
+        notesArea.setFocusTraversable(false);
+        notesArea.setWrapText(true);
+        notesArea.setMinHeight(NOTES_HEIGHT);
+        notesArea.setPrefHeight(NOTES_HEIGHT);
+        notesArea.setMaxHeight(NOTES_HEIGHT);
+        GridPane.setHgrow(notesArea, Priority.ALWAYS);
+        return notesArea;
     }
 
     private VBox createLifecycleHistory() {
@@ -124,7 +154,6 @@ public final class PossessionDetailView {
         deleteButton.setOnAction(event -> deleteSelectedEvent());
         HBox actions = new HBox(10, addButton, editButton, deleteButton);
         VBox content = new VBox(12, actions, eventTable);
-        content.setPadding(new Insets(20));
         VBox.setVgrow(eventTable, Priority.ALWAYS);
         return content;
     }
