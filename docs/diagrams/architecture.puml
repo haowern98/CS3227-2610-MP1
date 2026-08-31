@@ -1,43 +1,69 @@
 @startuml
-title Possession Manager Architecture
+title Possession Manager UML Architecture Diagram
 
+allowmixing
 !pragma layout smetana
-
-skinparam backgroundColor white
-skinparam componentStyle rectangle
-skinparam defaultFontName Arial
-skinparam shadowing false
-skinparam packageStyle rectangle
 
 top to bottom direction
 
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam nodesep 65
+skinparam ranksep 70
+skinparam ArrowColor #333333
+skinparam ClassBorderColor #555555
+skinparam ClassFontColor #111111
+
+hide methods
+hide stereotypes
+hide circle
+
 actor User
 
-component "App\nJavaFX entry point and navigation" as App
-
-package "Presentation" {
-    component "UI\nDashboard, detail view, and dialogs" as UI
+class "Application" as Application #F2F2F2 {
+    App
 }
 
-package "Application and domain" {
-    component "Services\nValidation, querying, integrity,\nand persistent changes" as Services
-    component "Model\nImmutable records, enums,\nand AppData snapshots" as Model
+class "UI (JavaFX)" as UI #E8F4E8 {
+    DashboardView
+    PossessionDetailView
+    PossessionDialog
+    LifecycleEventDialog
 }
 
-package "Persistence" {
-    component "JSON storage\nLoad, validate, save, and recover" as Storage
-    database "Local data.json" as DataFile
+class "Service (Application Logic)" as Service #E5F1FB {
+    PossessionService
+    LifecycleEventService
+    PersistentChange
 }
 
-User --> UI : interacts with
-App --> UI : creates and navigates
-App --> Services : creates shared instances
-App --> Storage : loads startup data
-UI --> Services : queries and changes data
-UI --> Model : displays records
-Services --> Model : owns and returns records
-Services --> Storage : saves complete snapshots
-Storage --> Model : serializes AppData
-Storage --> DataFile : reads and writes
+class "Model" as Model #FFF7DC {
+    Possession / PossessionInput
+    LifecycleEvent / LifecycleEventInput
+    AppData
+    Domain enums
+}
+
+class "Storage" as Storage #F9E5EE {
+    JsonStorage
+    AppDataFile
+}
+
+database "~/.possession-manager/\ndata.json" as DataFile #FFFFFF
+
+User -right-> UI : uses views\nand dialogs
+UI -right-> Service : queries and\nchanges data
+Service -right-> Model : validates, queries,\nand owns records
+Application -down-> UI : creates views and\ncontrols navigation
+Application -right-> Service : creates shared\nservices
+Service -down-> Storage : persists complete\nAppData snapshots
+Storage -right-> DataFile : reads and safely\nreplaces JSON data
+
+note bottom of UI
+Both main views use the same
+service and storage instances.
+end note
 
 @enduml

@@ -125,10 +125,10 @@ the shared service and storage instances used across screen changes. JavaFX view
 interaction, services own application state and domain rules, model records represent that state,
 and the storage component persists complete `AppData` snapshots to a local JSON file.
 
-![Possession Manager architecture and component dependencies](diagrams/architecture.png)
+![Possession Manager UML architecture and major dependencies](diagrams/architecture.png)
 
-The arrows in the diagram point from a component to another component it uses. The architecture is
-kept within one desktop process; the JSON file is the only external data boundary.
+The arrows show the major dependencies between the components. The architecture is kept within one
+desktop process; the JSON file is the only external data boundary.
 
 ### Component responsibilities
 
@@ -137,9 +137,9 @@ kept within one desktop process; the JSON file is the only external data boundar
 - **UI** contains `DashboardView`, `PossessionDetailView`, `PossessionDialog`, and
   `LifecycleEventDialog`. It renders model data, collects input, invokes services, and presents
   validation or storage errors.
-- **Services** contains `PossessionService`, `LifecycleEventService`, and `PersistentChange`.
-  Together they validate and normalize input, answer queries, preserve possession-event integrity,
-  and coordinate mutation with persistence.
+- **Service (application logic)** contains `PossessionService`, `LifecycleEventService`, and
+  `PersistentChange`. Together they validate and normalize input, answer queries, preserve
+  possession-event integrity, and coordinate mutation with persistence.
 - **Model** contains immutable possession and lifecycle-event records, their input records and
   enums, and `AppData`, which represents one complete persistence snapshot.
 - **JSON storage** contains `JsonStorage`, which reads, validates, and safely replaces the data

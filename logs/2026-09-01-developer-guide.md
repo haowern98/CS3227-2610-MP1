@@ -32,3 +32,17 @@ storage classes, and local JSON file. The architecture section presents those co
 high level and records the startup flow. A PlantUML component diagram was created from the current
 source; lower-level classes and calls were omitted for readability and will be covered by later
 design diagrams.
+
+The student reviewed the architecture diagram against the intended layered UML presentation. The
+final version uses the application's actual Application, UI, Service, Model, and Storage components,
+removes decorative component glyphs, and uses a horizontal runtime flow so that arrows do not
+obstruct text.
+
+## Verification
+
+Verification was performed on Windows 11 using Temurin JDK 25.0.4.1. The command
+`.\gradlew.bat clean check javadoc assemble` completed successfully; Javadoc reported 19 existing
+missing-comment warnings. `markdownlint-cli2` checked the repository Markdown files and reported
+no issues. PlantUML accepted the diagram source, and the rendered PNG was visually checked for
+readability and unobstructed labels. No UI test was needed because application behavior was not
+changed.
