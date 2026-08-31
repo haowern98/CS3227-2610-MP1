@@ -1,5 +1,15 @@
 # Possession Manager User Guide
 
+## Table of Contents
+
+- [Overview](#overview)
+- [1. Getting Started](#1-getting-started)
+- [2. Using the Dashboard](#2-using-the-dashboard)
+- [3. Managing Possessions](#3-managing-possessions)
+- [4. Managing Lifecycle Events](#4-managing-lifecycle-events)
+- [5. Data Storage and Recovery](#5-data-storage-and-recovery)
+- [6. Known Limitations](#6-known-limitations)
+
 ## Overview
 
 Possession Manager is a local desktop application for recording physical belongings, where they
