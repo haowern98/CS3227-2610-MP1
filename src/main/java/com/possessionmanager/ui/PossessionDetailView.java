@@ -93,7 +93,9 @@ public final class PossessionDetailView {
         Tab lifecycleTab = new Tab("Lifecycle History", createLifecycleHistory());
         overviewTab.setClosable(false);
         lifecycleTab.setClosable(false);
-        return new TabPane(overviewTab, lifecycleTab);
+        TabPane tabs = new TabPane(overviewTab, lifecycleTab);
+        tabs.getStyleClass().add("detail-tabs");
+        return tabs;
     }
 
     private VBox createOverview() {
