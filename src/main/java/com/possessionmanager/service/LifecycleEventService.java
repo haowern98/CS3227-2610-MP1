@@ -114,6 +114,11 @@ public final class LifecycleEventService {
         return List.copyOf(events.values());
     }
 
+    void restore(List<LifecycleEvent> snapshot) {
+        events.clear();
+        snapshot.forEach(event -> events.put(event.id(), event));
+    }
+
     private void requirePossession(UUID possessionId) {
         if (possessionId == null || possessionService.findById(possessionId).isEmpty()) {
             throw new ValidationException("Possession was not found.");

@@ -1,11 +1,11 @@
 package com.possessionmanager.ui;
 
-import com.possessionmanager.model.AppData;
 import com.possessionmanager.model.Possession;
 import com.possessionmanager.model.PossessionCategory;
 import com.possessionmanager.model.PossessionInput;
 import com.possessionmanager.model.PossessionStatus;
 import com.possessionmanager.service.LifecycleEventService;
+import com.possessionmanager.service.PersistentChange;
 import com.possessionmanager.service.PossessionService;
 import com.possessionmanager.service.ValidationException;
 import com.possessionmanager.storage.JsonStorage;
@@ -42,7 +42,7 @@ public final class DashboardView {
 
     private final PossessionService possessionService;
     private final LifecycleEventService lifecycleEventService;
-    private final JsonStorage storage;
+    private final PersistentChange persistentChange;
     private final Consumer<java.util.UUID> showPossessionDetail;
     private final TableView<Possession> possessionTable = new TableView<>();
     private final ObservableList<Possession> displayedPossessions = FXCollections.observableArrayList();
@@ -63,7 +63,7 @@ public final class DashboardView {
             JsonStorage storage, Consumer<java.util.UUID> showPossessionDetail) {
         this.possessionService = possessionService;
         this.lifecycleEventService = lifecycleEventService;
-        this.storage = storage;
+        persistentChange = new PersistentChange(possessionService, lifecycleEventService, storage);
         this.showPossessionDetail = showPossessionDetail;
         configureFilters();
         configureTable();
@@ -209,11 +209,13 @@ public final class DashboardView {
 
     private void applyChange(Runnable change) {
         try {
-            change.run();
-            storage.save(new AppData(possessionService.toAppData().possessions(), lifecycleEventService.listAll()));
-            refreshTable();
-        } catch (ValidationException | StorageException exception) {
+            persistentChange.run(change);
+        } catch (ValidationException exception) {
             showError(exception.getMessage());
+        } catch (StorageException exception) {
+            showError(exception.getMessage() + " No changes were kept.");
+        } finally {
+            refreshTable();
         }
     }
 

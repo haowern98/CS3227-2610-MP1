@@ -163,6 +163,15 @@ public final class PossessionService {
         return new AppData(List.copyOf(possessions.values()));
     }
 
+    List<Possession> snapshot() {
+        return List.copyOf(possessions.values());
+    }
+
+    void restore(List<Possession> snapshot) {
+        possessions.clear();
+        snapshot.forEach(possession -> possessions.put(possession.id(), possession));
+    }
+
     private Possession requirePossession(UUID possessionId) {
         return findById(possessionId)
                 .orElseThrow(() -> new ValidationException("Possession was not found."));

@@ -1,10 +1,10 @@
 package com.possessionmanager.ui;
 
-import com.possessionmanager.model.AppData;
 import com.possessionmanager.model.LifecycleEvent;
 import com.possessionmanager.model.LifecycleEventInput;
 import com.possessionmanager.model.Possession;
 import com.possessionmanager.service.LifecycleEventService;
+import com.possessionmanager.service.PersistentChange;
 import com.possessionmanager.service.PossessionService;
 import com.possessionmanager.service.ValidationException;
 import com.possessionmanager.storage.JsonStorage;
@@ -40,7 +40,7 @@ public final class PossessionDetailView {
 
     private final PossessionService possessionService;
     private final LifecycleEventService lifecycleEventService;
-    private final JsonStorage storage;
+    private final PersistentChange persistentChange;
     private final Runnable showDashboard;
     private final TableView<LifecycleEvent> eventTable = new TableView<>();
     private final ObservableList<LifecycleEvent> displayedEvents = FXCollections.observableArrayList();
@@ -59,7 +59,7 @@ public final class PossessionDetailView {
             JsonStorage storage, Runnable showDashboard) {
         this.possessionService = possessionService;
         this.lifecycleEventService = lifecycleEventService;
-        this.storage = storage;
+        persistentChange = new PersistentChange(possessionService, lifecycleEventService, storage);
         this.showDashboard = showDashboard;
     }
 
@@ -209,11 +209,13 @@ public final class PossessionDetailView {
 
     private void applyChange(Runnable change) {
         try {
-            change.run();
-            storage.save(new AppData(possessionService.toAppData().possessions(), lifecycleEventService.listAll()));
-            refreshEvents();
-        } catch (ValidationException | StorageException exception) {
+            persistentChange.run(change);
+        } catch (ValidationException exception) {
             showError(exception.getMessage());
+        } catch (StorageException exception) {
+            showError(exception.getMessage() + " No changes were kept.");
+        } finally {
+            refreshEvents();
         }
     }
 
