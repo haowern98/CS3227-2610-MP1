@@ -1,19 +1,28 @@
 # Possession Manager User Guide
 
+## Overview
+
 Possession Manager is a local desktop application for recording physical belongings, where they
-are kept, their current status, and important events throughout their lifecycle. It is useful for
+are kept, their current status, and important events throughout their lifecycle. It is suitable for
 items such as electronics, books, travel equipment, and hobby supplies.
 
-## Quick start
+The application allows you to:
+
+- record, update, search, filter, and delete possessions;
+- view the full details of a possession;
+- maintain a dated lifecycle history for each possession; and
+- keep data between sessions without using an online account.
+
+## 1. Getting Started
 
 ### Requirements
 
 - A Java 25 JDK. Run `java --version` and confirm that the first line reports version 25.
-- An internet connection for the first Gradle run so the required dependencies can be downloaded.
-- A checkout of this repository. The current development version does not yet include a packaged
-  release JAR.
+- An internet connection for the first Gradle run so that the required dependencies can be
+  downloaded.
+- A checkout of this repository.
 
-### Launch from source
+### Launching the application
 
 Open a terminal in the repository root and run the command for your operating system.
 
@@ -29,41 +38,55 @@ macOS or Linux:
 ./gradlew run
 ```
 
-The application opens on the dashboard. Closing the application window exits the program; every
-successful change has already been saved.
+The application opens on the dashboard. Closing the application window exits the program. Every
+successful change is saved when it is made, so there is no separate save button.
 
-## Interface tour
+### Checking that the application works
+
+After launching the application:
+
+1. Select **Add Possession**.
+2. Enter a name, such as `Laptop`.
+3. Select **OK**.
+4. Confirm that the new possession appears on the dashboard.
+
+You can delete this example later by following [Delete a possession](#delete-a-possession).
+
+## 2. Using the Dashboard
+
+The dashboard is the main screen for finding possessions and opening possession actions.
 
 ![Dashboard containing six example possessions](images/dashboard-overview.png)
 
-The dashboard has four main areas:
+The dashboard contains:
 
-1. The search box finds possessions by name or tag.
-2. The category and status controls narrow the displayed possessions. **Clear Filters** restores
-   the complete list.
-3. **Add Possession** opens the form for recording a new item.
-4. The table displays each possession's name, category, location, status, and tags. Select a row to
-   enable **View Details**, **Edit Selected**, and **Delete Selected**.
+1. A search box for finding possessions by name or tag.
+2. Category and status filters for narrowing the displayed possessions.
+3. **Clear Filters**, which restores the complete list.
+4. **Add Possession**, which opens the form for recording a new item.
+5. A table showing each possession's name, category, location, status, and tags.
+6. Buttons for viewing, editing, or deleting the selected possession.
 
-Possessions are displayed alphabetically by name. The count above the table reflects the currently
-displayed results.
+Possessions are displayed alphabetically by name. The count above the table shows the number of
+possessions currently displayed. Select a table row to enable the possession-action buttons.
 
-## Five-minute walkthrough
+### Searching for possessions
 
-This walkthrough introduces the main workflow without deleting any data.
+Enter text in the search box. The results update as you type.
 
-1. Select **Add Possession**.
-2. Enter `Laptop` as the name, choose **Electronics**, enter `Desk Drawer` as the location, leave the
-   status as **In use**, and enter `work, portable, warranty` as the tags.
-3. Add a short note such as `Includes charger and protective sleeve.`, then select **OK**.
-4. Enter `portable` in the search box and confirm that the Laptop remains visible.
-5. Select **Clear Filters**, select the Laptop row, and choose **View Details**.
-6. Select **Add Event**, choose **Purchase**, select a date that is not in the future, enter
-   `Purchased for coursework` as the description, and select **OK**.
-7. Return with **Back to Dashboard**, close the application, and launch it again. The Laptop and its
-   event should still be present.
+Search is case-insensitive and matches partial text in possession names and tags. For example,
+searching for `port` can find an item named `Portable Stove` or an item tagged `portable`. Search
+does not inspect locations, notes, or lifecycle events.
 
-## Managing possessions
+### Filtering possessions
+
+Choose a category, a status, or both. Search and filters work together, so you can, for example,
+search for `travel` while displaying only possessions in the **Electronics** category with the
+**In use** status.
+
+Select **Clear Filters** to clear the search text and both filters.
+
+## 3. Managing Possessions
 
 ### Add a possession
 
@@ -76,117 +99,112 @@ Select **Add Possession**, complete the form, and select **OK**.
 | Location | Optional free text describing where the item is kept. |
 | Status | Defaults to **In use**. Available values are In use, Lent out, and Retired. |
 | Tags | Optional comma-separated search labels, for example `travel, fragile, warranty`. |
-| Notes | Optional multiline details such as condition, included accessories, or storage reminders. |
+| Notes | Optional multiline details, such as condition, included accessories, or storage reminders. |
 
-Empty tags and extra spaces around comma-separated tags are ignored. Tags are displayed using the
+Empty tags and extra spaces around comma-separated tags are ignored. Tags retain the
 capitalization entered by the user.
+
+Select **Cancel** or close the dialog to leave the possessions unchanged.
 
 ### Edit a possession
 
-Select a possession and choose **Edit Selected**. Change any field and select **OK**. The item keeps
-its lifecycle history after its details are edited.
+1. Select a possession on the dashboard.
+2. Select **Edit Selected**.
+3. Change the required fields.
+4. Select **OK**.
 
-### Search and filter
-
-The dashboard updates as text is entered in the search box. Search is case-insensitive and matches
-partial text in possession names and tags. It does not search locations, notes, or lifecycle-event
-text.
-
-Category and status filters can be combined with search. For example, search for `travel`, choose
-**Electronics**, and choose **In use** to show only active electronics carrying that tag. Select
-**Clear Filters** to clear the search text and both filters.
+Editing a possession does not remove its lifecycle history. Select **Cancel** or close the dialog
+to keep the existing details.
 
 ### View possession details
 
 Select a possession and choose **View Details**, or double-click its table row. The detail screen
-shows the category, status, location, tags, notes, and complete lifecycle history. Blank location,
-tags, or notes values are displayed as `Not recorded`.
+shows its category, status, location, tags, notes, and complete lifecycle history.
 
 ![Laptop details and lifecycle history](images/possession-details.png)
 
-Select **Back to Dashboard** to return to the main table.
+Blank location, tags, or notes values are displayed as `Not recorded`. Select
+**Back to Dashboard** to return to the main table.
 
-### Permanently delete a possession
+### Delete a possession
 
-Select a possession and choose **Delete Selected**. The confirmation states how many lifecycle
-events will also be removed.
+1. Select a possession on the dashboard.
+2. Select **Delete Selected**.
+3. Review the confirmation, including the number of lifecycle events that will also be deleted.
 
 ![Confirmation before deleting a possession and its lifecycle events](images/delete-possession-confirmation.png)
 
-Select **Cancel** to keep the possession. Selecting **Delete** permanently removes the possession
+Select **Cancel** to keep the possession. Select **Delete** to permanently remove the possession
 and all of its lifecycle events. This operation cannot be undone.
 
-## Managing lifecycle history
+## 4. Managing Lifecycle Events
 
-Lifecycle events record when something important happened to a possession. Open the possession's
-detail screen to manage them.
+Lifecycle events record important events in a possession's history. Open the possession's detail
+screen to add, edit, or delete them.
 
-### Add an event
+### Add a lifecycle event
 
 Select **Add Event**, complete the form, and select **OK**.
 
 | Field | Requirement and behavior |
 | --- | --- |
 | Event Type | Defaults to **Added**. Available values are Purchase, Added, Maintenance, Repair, Loan, Return, Upgrade, Retired, and Other. |
-| Date | Defaults to today. Select a date using the displayed date or calendar button. Typing and pasting are disabled. Future dates are rejected. |
+| Date | Defaults to today. Select today or an earlier date using the displayed date or calendar button. Typing and pasting are disabled. |
 | Description | Required short explanation of the event. |
 | Notes | Optional additional details. |
 
-Events are displayed from newest date to oldest date.
+Future event dates are rejected. Events are displayed from newest date to oldest date.
 
-### Edit or delete an event
+Select **Cancel** or close the dialog to leave the lifecycle history unchanged.
 
-Select an event and choose **Edit Selected** to change it. Choose **Delete Selected** and confirm to
-remove only that event from the possession's history. Cancelling either dialog keeps the existing
-data unchanged.
+### Edit a lifecycle event
 
-## Saving and recovery
+1. Select an event from the lifecycle-history table.
+2. Select **Edit Selected**.
+3. Change the required fields.
+4. Select **OK**.
 
-Possession Manager stores all possessions and lifecycle events in one local JSON file. The file is
-located at:
+Select **Cancel** or close the dialog to keep the existing event.
+
+### Delete a lifecycle event
+
+1. Select an event from the lifecycle-history table.
+2. Select **Delete Selected**.
+3. Confirm the deletion.
+
+Deleting a lifecycle event removes only that event. Cancelling the confirmation keeps it.
+
+## 5. Data Storage and Recovery
+
+Possession Manager stores all possessions and lifecycle events in one local JSON file:
 
 - Windows: `%USERPROFILE%\.possession-manager\data.json`
 - macOS and Linux: `~/.possession-manager/data.json`
 
-The application saves after every successful addition, edit, or deletion. If saving fails, an error
-ending with `No changes were kept.` is displayed, and the attempted change is discarded. A later
-successful save therefore cannot accidentally include the failed change.
+The application saves after every successful addition, edit, or deletion. Do not edit the data
+file while the application is running.
 
-If the application cannot load an existing data file, it attempts to preserve that file beside the
-original as `data.corrupt-<timestamp>.json`, reports the problem, and starts with empty data. Do not
-edit the JSON file while the application is running.
+### Save failure
 
-## Troubleshooting
+If a change cannot be saved, the application displays an error ending with
+`No changes were kept.` The attempted change is discarded, and the displayed possessions and
+lifecycle events return to their state before the operation. A later successful save will not
+include the failed change.
 
-### The application does not start
+### Unreadable or invalid data
 
-1. Run `java --version` and confirm that Java 25 is active.
-2. Run the platform-appropriate Gradle command from the repository root.
-3. Confirm that an internet connection is available if Gradle is downloading dependencies for the
-   first time.
+If the application cannot load an existing data file, it attempts to preserve the file beside the
+original as `data.corrupt-<timestamp>.json`. It then reports the problem and starts with empty data.
+The backup can be retained for investigation or manual recovery.
 
-### A possession is not visible
+## 6. Known Limitations
 
-Select **Clear Filters**. If it remains missing, search using part of its name. Remember that search
-does not inspect location, notes, or lifecycle-event text.
-
-### An event date is rejected
-
-Choose today or an earlier date from the calendar. Lifecycle history cannot contain future events.
-
-### A change cannot be saved
-
-Read the error message and confirm that the current user can write to the `.possession-manager`
-directory. The displayed data should remain unchanged when saving fails.
-
-## Current limitations
-
-- The current development version must be launched through Gradle; a packaged release JAR has not
-  yet been produced.
-- Data is local to one operating-system user profile. There is no cloud sync, account system,
-  import, or export feature.
-- Categories, statuses, and lifecycle-event types are fixed to the values listed in this guide.
-- Permanent deletion has no undo operation.
-- Development data from an earlier version using the removed `Archived` status is not migrated.
-- The GUI has been manually verified on Windows 11. Automated builds and tests pass on Windows,
-  Linux, and macOS, but manual GUI verification on Linux and macOS remains outstanding.
+- Data is stored locally for one operating-system user. The application does not provide cloud
+  synchronization, accounts, import, or export.
+- Categories, statuses, and lifecycle-event types are limited to the fixed values listed in this
+  guide.
+- Permanent deletion cannot be undone.
+- Data that uses the `Archived` status from an earlier development version is not migrated.
+- The graphical interface has been manually verified on Windows 11. Automated builds and tests
+  pass on Windows, Linux, and macOS, but manual interface verification on Linux and macOS remains
+  outstanding.
