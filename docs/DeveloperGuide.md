@@ -142,19 +142,9 @@ desktop process; the JSON file is the only external data boundary.
 
 ### Application startup
 
-At startup, `App` obtains the platform-independent data path from `AppDataFile` and asks
-`JsonStorage` to load it. The returned `AppData` initializes `PossessionService`, after which
-`LifecycleEventService` is initialized with the same possession service and the saved events. This
-shared reference allows lifecycle operations to verify that every event belongs to an existing
-possession.
-
-`App` then creates one JavaFX scene, applies the shared stylesheet, and displays the dashboard.
-Navigation replaces the scene root instead of creating a new window or recreating the services, so
-both main views operate on the same in-memory state.
-
-If loading fails, `App` reports the storage error and continues with an empty `AppData` snapshot.
-Corrupt-file preservation is handled inside `JsonStorage` and is explained in
-[Startup and corrupt-data recovery](#startup-and-corrupt-data-recovery).
+At startup, `App` loads an `AppData` snapshot through `JsonStorage`, initializes the shared
+services, and displays the dashboard. Navigation reuses the same service and storage instances,
+ensuring that all views operate on one consistent in-memory state.
 
 ## 4. Design
 
