@@ -63,6 +63,7 @@ public final class LifecycleEventDialog {
         private Fields(LifecycleEvent event) {
             typeBox.getItems().setAll(LifecycleEventType.values());
             datePicker.setEditable(false);
+            datePicker.getEditor().setOnMouseClicked(mouseEvent -> datePicker.show());
             notesArea.setPrefRowCount(3);
             populate(event);
         }
