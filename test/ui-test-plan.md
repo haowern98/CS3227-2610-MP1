@@ -74,3 +74,15 @@ captured. A result is not verified until a human has visually checked the releva
   and `Back to Dashboard` returns to the dashboard.
 - Observed result: Passed on Windows 11 on 31 August 2026 using `./gradlew.bat run`. The student
   confirmed the lifecycle-focused detail screen after checking the listed behavior.
+
+## UI-006: Choose lifecycle-event dates from the calendar
+
+- Aim: confirm lifecycle-event dates can only be selected using the date-picker calendar.
+- Preconditions: launch the dashboard with at least one possession and open its detail screen.
+- Actions: choose `Add Event`, try to type and paste into the date field, then use the calendar button
+  to select a date. Repeat in the `Edit Lifecycle Event` dialog.
+- Expected result: typing and pasting do not change the date. Calendar selection works in both
+  dialogs. Selecting a future date and choosing `OK` still shows the existing validation error.
+- Observed result: Passed on Windows 11 on 31 August 2026 using `./gradlew.bat run`. The student
+  confirmed typing and pasting are blocked, calendar selection works in both dialogs, and the
+  existing future-date validation still appears.
