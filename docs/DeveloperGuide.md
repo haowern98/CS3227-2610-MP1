@@ -118,6 +118,20 @@ macOS or Linux:
 ./gradlew clean check javadoc assemble
 ```
 
+### Repository layout
+
+```text
+CS3227-2610-MP1/
+├── src/main/java/       application source
+├── src/test/java/       JUnit tests
+├── docs/                guides and UML diagrams
+├── test/                manual UI test plan
+├── .github/workflows/   continuous-integration workflow
+├── logs/                verified AI interaction summaries
+├── build.gradle         build configuration
+└── gradlew(.bat)        Gradle wrapper scripts
+```
+
 ## 3. Architecture
 
 Possession Manager uses a small layered architecture. `App` initializes the application and keeps
