@@ -2,8 +2,8 @@
 
 ## Current status
 
-Phase 3 adds a manually verified lifecycle-history screen on Windows 11. Relationship and
-compatibility features are not available yet.
+The app provides a manually verified lifecycle-history screen on Windows 11. Relationship and
+compatibility features are outside the simplified product scope.
 
 ## Prerequisites
 
@@ -37,10 +37,10 @@ The available statuses are **In use**, **Lent out**, and **Retired**.
 
 ## Recording lifecycle history
 
-Open a possession's detail screen and select **Lifecycle History**. Use **Add Event** to record a
-purchase, maintenance activity, loan, return, repair, upgrade, retirement, or other dated event.
-Each event needs an event type, date, and description; notes are optional. Dates after today are
-rejected to avoid accidental future history.
+Open a possession's detail screen to see its location, tags, notes, and lifecycle history together.
+Use **Add Event** to record a purchase, maintenance activity, loan, return, repair, upgrade,
+retirement, or other dated event. Each event needs an event type, date, and description; notes are
+optional. Dates after today are rejected to avoid accidental future history.
 
 Select an event to edit or delete it. Events appear newest first. All successful event changes are
 saved with the possession data and remain after the application is relaunched.
