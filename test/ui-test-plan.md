@@ -88,3 +88,18 @@ captured. A result is not verified until a human has visually checked the releva
 - Observed result: Passed on Windows 11 on 1 September 2026 using `./gradlew.bat run`. The student
   confirmed that both date-selection routes work in both dialogs, the date display has an arrow
   cursor, typing and pasting are blocked, and future-date validation remains in place.
+
+## UI-007: Recover from a save failure
+
+- Aim: confirm that a failed save leaves the displayed and persisted application data unchanged.
+- Preconditions: launch the app with one possession containing two lifecycle events. In a second
+  PowerShell window, run `$dataLock = [IO.File]::Open("$env:USERPROFILE\.possession-manager\data.json",
+  'OpenOrCreate', 'ReadWrite', 'None')` to hold an exclusive lock while testing.
+- Actions: while the file is locked, try adding, editing, and deleting a possession and a lifecycle
+  event. Try deleting the possession with both events. Run `$dataLock.Dispose()` to release the lock,
+  make one successful change, close the app, and relaunch it.
+- Expected result: every failed operation displays an error ending with `No changes were kept.` and
+  leaves the current table unchanged. Failed possession deletion preserves the possession and both
+  events, and its detail screen still opens. After the lock is released, the successful change is
+  saved normally. Relaunching shows that change but none of the failed changes.
+- Observed result: Pending manual verification.
