@@ -35,16 +35,16 @@ captured. A result is not verified until a human has visually checked the releva
   restored from local storage.
 - Preconditions: launch the dashboard with at least one active possession and an accessible local
   data directory.
-- Actions: select a possession, choose `View Details`, inspect the Overview tab, open `Lifecycle
-  History`, add two dated events, edit one description, confirm newest-date-first ordering, delete
-  one event, close the app, and relaunch it.
+- Actions: select a possession, choose `View Details`, inspect its details and lifecycle history, add
+  two dated events, edit one description, confirm newest-date-first ordering, delete one event,
+  close the app, and relaunch it.
 - Expected result: the detail screen shows the selected possession, successful changes appear at
   once, the newer event is listed first, and the undeleted event remains after relaunch. An invalid
   future date shows a clear error and does not add an event.
 - Observed result: Passed on Windows 11 on 29 August 2026 using `./gradlew.bat run`. The student
-  confirmed the Overview and Lifecycle History screens, add/edit/delete, newest-first ordering,
-  future-date validation, and persistence after relaunch. A screenshot of lifecycle history was
-  supplied in the development conversation.
+  confirmed the possession details, add/edit/delete, newest-first ordering, future-date validation,
+  and persistence after relaunch. A screenshot of lifecycle history was supplied in the development
+  conversation.
 
 ## UI-004: Permanently delete a possession
 
@@ -61,14 +61,16 @@ captured. A result is not verified until a human has visually checked the releva
   confirmed the disabled state, correct count of two lifecycle events, cancellation, immediate
   dashboard removal, preservation of unrelated data, and persistence after relaunch.
 
-## UI-005: Align possession detail tabs
+## UI-005: View possession details and lifecycle history
 
-- Aim: confirm the possession detail tabs align with the header without a full-width gray bar.
-- Preconditions: launch the dashboard with at least one possession.
-- Actions: open the possession's detail screen and compare the left edges of `Back to Dashboard` and
-  `Overview`. Inspect the area to the right of `Lifecycle History`.
-- Expected result: the `Overview` tab begins directly below the left edge of `Back to Dashboard`.
-  The tab-header background is transparent, with no gray bar extending across the window.
+- Aim: confirm the detail screen presents possession information and lifecycle history without tabs.
+- Preconditions: launch the dashboard with one possession containing notes and one without notes.
+  Add at least one lifecycle event to either possession.
+- Actions: open each possession's detail screen. Inspect the location, tags, notes area, lifecycle
+  heading, action buttons, and event table. Return to the dashboard using `Back to Dashboard`.
+- Expected result: details and lifecycle history appear together without `Overview` or `Lifecycle
+  History` tabs. Notes appear in a fixed-height, read-only multiline box, wrap without resizing the
+  screen, and show `Not recorded` when empty. Lifecycle actions and the event table remain usable,
+  and `Back to Dashboard` returns to the dashboard.
 - Observed result: Passed on Windows 11 on 31 August 2026 using `./gradlew.bat run`. The student
-  supplied a screenshot confirming exact left-edge alignment and removal of the gray header bar;
-  both tabs remained visible and usable.
+  confirmed the lifecycle-focused detail screen after checking the listed behavior.
