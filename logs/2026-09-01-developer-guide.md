@@ -15,5 +15,12 @@ student reviewed and approved that structure before it was added to `docs/Develo
 
 ## Current scope
 
-This change contains the Developer Guide outline only. Detailed explanations and diagrams will be
-developed together section by section and checked against the current source code.
+The first change contained the Developer Guide outline only. Detailed explanations and diagrams
+are being developed together section by section and checked against the current source code.
+
+## Introduction and setup
+
+Codex checked the application entry point, Gradle build, wrapper configuration, CI workflow, and
+User Guide before drafting the introduction and development setup. The documented commands use the
+repository's Gradle wrapper and distinguish Windows from macOS and Linux. No system Gradle
+installation is required.
