@@ -132,18 +132,13 @@ desktop process; the JSON file is the only external data boundary.
 
 ### Component responsibilities
 
-- **`App`** loads startup data, constructs the shared services, owns the JavaFX `Scene`, and changes
-  its root between the dashboard and possession-detail views.
-- **UI** contains `DashboardView`, `PossessionDetailView`, `PossessionDialog`, and
-  `LifecycleEventDialog`. It renders model data, collects input, invokes services, and presents
-  validation or storage errors.
-- **Service (application logic)** contains `PossessionService`, `LifecycleEventService`, and
-  `PersistentChange`. Together they validate and normalize input, answer queries, preserve
-  possession-event integrity, and coordinate mutation with persistence.
-- **Model** contains immutable possession and lifecycle-event records, their input records and
-  enums, and `AppData`, which represents one complete persistence snapshot.
-- **JSON storage** contains `JsonStorage`, which reads, validates, and safely replaces the data
-  file, and `AppDataFile`, which resolves its location below the user's home directory.
+| Component | Role |
+| --- | --- |
+| [Application](#application-startup) | Starts the app and controls navigation |
+| [UI](#ui-component) | Displays data, collects input, and reports errors |
+| [Service](#service-component) | Manages state, validation, integrity, and persistence |
+| [Model](#model-component) | Defines immutable application data |
+| [Storage](#storage-component) | Loads and safely saves local JSON data |
 
 ### Application startup
 
