@@ -9,10 +9,12 @@ captured. A result is not verified until a human has visually checked the releva
 
 - Aim: confirm that the JavaFX application starts without a startup error.
 - Preconditions: a Java 25 JDK is available and the repository root is the working directory.
-- Actions: run `./gradlew.bat run` on Windows or `./gradlew run` on macOS/Linux.
+- Actions: run `java -jar release/PossessionManager.jar` from the repository root.
 - Expected result: a window titled `Possession Manager` opens and shows the dashboard.
 - Observed result: Passed on Windows 11 on 29 August 2026 using `./gradlew.bat run`. The dashboard
-  opened without a startup error; a screenshot was supplied in the development conversation.
+  opened without a startup error; a screenshot was supplied in the development conversation. Passed
+  again on Windows 11 on 1 September 2026 using
+  `java -jar release\PossessionManager.jar`; the release JAR opened the normal dashboard.
 
 ## UI-002: Manage possessions
 
