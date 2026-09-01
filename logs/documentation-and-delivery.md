@@ -74,10 +74,14 @@ warnings but did not fail the build.
 On 1 September 2026, a local `release/PossessionManager.jar` was built with the Gradle `releaseJar`
 task. The JAR bundles JavaFX and Gson, declares the launcher entry point, and started normally on
 Windows 11 with Temurin JDK 25.0.4.1 using `java -jar release\PossessionManager.jar`. The student
-visually confirmed that the normal dashboard appeared. The JAR remains local and uncommitted until
-the final documentation and release pass.
+visually confirmed that the normal dashboard appeared. The JAR was kept local while the final
+documentation and release pass were completed.
 
 After that smoke test, the README, User Guide, and UI launch test were updated to use the release
 JAR as the primary user launch path. The Developer Guide retains Gradle commands for source
 development and includes the separate release-JAR verification command. Markdown linting and local
 link checks passed, and the documentation was scanned for stale launch instructions and em dashes.
+
+For the final release, `PossessionManager.jar` was rebuilt from version 1.0.0, checked with the full
+Java 25 Gradle build, and launched on Windows 11. The student visually confirmed the normal
+dashboard before publication as `Possession Manager v1.0.0`.
