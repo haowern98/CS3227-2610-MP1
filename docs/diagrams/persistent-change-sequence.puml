@@ -1,0 +1,43 @@
+@startuml
+title Possession deletion with save success and rollback
+
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 55
+
+actor User
+participant DashboardView as Dashboard
+participant PersistentChange as Persistent
+participant "change : Runnable" as Mutation
+participant LifecycleEventService as Events
+participant PossessionService as Possessions
+database JsonStorage as Storage
+
+User -> Dashboard : confirm possession deletion
+Dashboard -> Persistent : run(change)
+Persistent -> Persistent : originalData = snapshot()
+Persistent -> Mutation : run()
+Mutation -> Events : deleteForPossession(possessionId)
+Mutation -> Possessions : deletePossession(possessionId)
+Mutation --> Persistent : return
+Persistent -> Persistent : updatedData = snapshot()
+Persistent -> Storage : save(updatedData)
+
+alt Save succeeds
+    Storage --> Persistent : return normally
+    Persistent --> Dashboard : return normally
+    Dashboard -> Dashboard : refreshTable()
+    Dashboard --> User : show updated dashboard
+else Save fails
+    Storage --> Persistent : StorageException
+    Persistent -> Possessions : restore(original possessions)
+    Persistent -> Events : restore(original events)
+    Persistent --> Dashboard : rethrow StorageException
+    Dashboard --> User : show storage error and\n"No changes were kept."
+    Dashboard -> Dashboard : refreshTable()
+end
+
+@enduml
