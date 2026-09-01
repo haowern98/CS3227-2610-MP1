@@ -122,8 +122,16 @@ macOS or Linux:
 
 ```text
 CS3227-2610-MP1/
-├── src/main/java/       application source
-├── src/test/java/       JUnit tests
+├── src/
+│   ├── main/java/com/possessionmanager/
+│   │   ├── model/       immutable records, inputs, enums, AppData
+│   │   ├── service/     application logic and persistence coordination
+│   │   ├── storage/     JSON loading and saving
+│   │   ├── ui/          JavaFX views and dialogs
+│   │   └── App.java     application entry point
+│   └── test/java/com/possessionmanager/
+│       ├── service/     service and rollback tests
+│       └── storage/     JSON storage tests
 ├── docs/                guides and UML diagrams
 ├── test/                manual UI test plan
 ├── .github/workflows/   continuous-integration workflow
