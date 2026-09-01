@@ -68,3 +68,16 @@ three reflection-ready logs. On Windows 11 with Temurin JDK 25.0.4.1,
 `.\gradlew.bat clean check javadoc assemble` passed. `markdownlint-cli2 "logs/**/*.md"` and
 `git diff --check` also passed. The Gradle Javadoc task reported 19 existing missing-comment
 warnings but did not fail the build.
+
+## Local release-JAR smoke test
+
+On 1 September 2026, a local `release/PossessionManager.jar` was built with the Gradle `releaseJar`
+task. The JAR bundles JavaFX and Gson, declares the launcher entry point, and started normally on
+Windows 11 with Temurin JDK 25.0.4.1 using `java -jar release\PossessionManager.jar`. The student
+visually confirmed that the normal dashboard appeared. The JAR remains local and uncommitted until
+the final documentation and release pass.
+
+After that smoke test, the README, User Guide, and UI launch test were updated to use the release
+JAR as the primary user launch path. The Developer Guide retains Gradle commands for source
+development and includes the separate release-JAR verification command. Markdown linting and local
+link checks passed, and the documentation was scanned for stale launch instructions and em dashes.

@@ -85,6 +85,27 @@ because the repository includes the Gradle 9.7.1 wrapper.
 The application entry point is `com.possessionmanager.App`. A window titled
 `Possession Manager` should open on the dashboard.
 
+### Testing the release JAR
+
+Build the local release artifact with the Gradle wrapper, then run the exact resulting JAR.
+
+Windows:
+
+```powershell
+.\gradlew.bat releaseJar
+java -jar release/PossessionManager.jar
+```
+
+macOS or Linux:
+
+```bash
+./gradlew releaseJar
+java -jar release/PossessionManager.jar
+```
+
+Repeat this check after the final release build. The user-facing launch instructions are in the
+[User Guide](UserGuide.md).
+
 ### Running automated tests
 
 Run the JUnit test suite from the repository root.
@@ -365,8 +386,8 @@ $dataLock = [IO.File]::Open(
 2. Confirm that each attempt reports `No changes were kept.` and that the displayed state is
    unchanged.
 3. Release the lock with `$dataLock.Dispose()`.
-4. Make one successful change, relaunch the application, and confirm that the successful change—but
-   none of the failed changes—was persisted.
+4. Make one successful change, relaunch the application, and confirm that the successful change was
+   persisted but none of the failed changes were.
 
 ### Recovering from invalid data
 

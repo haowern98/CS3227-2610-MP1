@@ -28,24 +28,14 @@ The application allows you to:
 ### Requirements
 
 - A Java 25 JDK. Run `java --version` and confirm that the first line reports version 25.
-- An internet connection for the first Gradle run so that the required dependencies can be
-  downloaded.
-- A checkout of this repository.
+- The released `PossessionManager.jar` file in the repository's `release/` folder.
 
 ### Launching the application
 
-Open a terminal in the repository root and run the command for your operating system.
-
-Windows:
-
-```powershell
-.\gradlew.bat run
-```
-
-macOS or Linux:
+Open a terminal in the repository root and run:
 
 ```bash
-./gradlew run
+java -jar release/PossessionManager.jar
 ```
 
 The application opens on the dashboard. Closing the application window exits the program. Every
